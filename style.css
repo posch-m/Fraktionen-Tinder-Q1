@@ -1,0 +1,227 @@
+/* ==========================================
+   FraktionsFinder 1848
+   ========================================== */
+
+:root{
+    --primary:#b22222;
+    --primary-dark:#8b1e1e;
+    --secondary:#f4f1ea;
+    --card:#ffffff;
+    --text:#2f2f2f;
+    --border:#dddddd;
+    --shadow:0 12px 30px rgba(0,0,0,.12);
+    --radius:18px;
+}
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+    font-family:"Poppins",sans-serif;
+    background:linear-gradient(135deg,#f5f3ef,#ece6dd);
+    color:var(--text);
+    min-height:100vh;
+}
+
+.container{
+    max-width:700px;
+    margin:40px auto;
+    padding:20px;
+}
+
+.hidden{
+    display:none;
+}
+
+.screen{
+    background:var(--card);
+    border-radius:var(--radius);
+    padding:35px;
+    box-shadow:var(--shadow);
+}
+
+h1{
+    font-size:2rem;
+    margin-bottom:15px;
+    text-align:center;
+}
+
+.subtitle{
+    text-align:center;
+    color:#666;
+    line-height:1.6;
+    margin-bottom:30px;
+}/* ==========================================
+   Startbutton
+========================================== */
+
+#start-btn{
+    display:block;
+    margin:0 auto;
+    padding:16px 36px;
+    border:none;
+    border-radius:999px;
+    background:var(--primary);
+    color:white;
+    font-size:1rem;
+    font-weight:600;
+    cursor:pointer;
+    transition:.25s;
+}
+
+#start-btn:hover{
+    background:var(--primary-dark);
+    transform:translateY(-2px);
+}
+
+/* ==========================================
+   Fortschritt
+========================================== */
+
+.progress-wrapper{
+    margin-bottom:25px;
+}
+
+.progress-bar{
+    width:100%;
+    height:10px;
+    background:#e6e6e6;
+    border-radius:999px;
+    overflow:hidden;
+}
+
+#progress{
+    width:0%;
+    height:100%;
+    background:var(--primary);
+    transition:width .4s ease;
+}
+
+#question-counter{
+    margin-top:10px;
+    text-align:right;
+    color:#666;
+    font-size:.9rem;
+}
+
+/* ==========================================
+   Quizkarte
+========================================== */
+
+.card{
+    background:#fff;
+    border-radius:16px;
+    padding:35px;
+    border:1px solid var(--border);
+    box-shadow:var(--shadow);
+}
+
+#question-text{
+    min-height:140px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    line-height:1.5;
+}
+
+/* ==========================================
+   Antwortbuttons
+========================================== */
+
+.button-group{
+    display:grid;
+    gap:15px;
+    margin-top:30px;
+}
+
+.button-group button{
+    padding:15px;
+    border:none;
+    border-radius:12px;
+    font-size:1rem;
+    cursor:pointer;
+    transition:.25s;
+    color:white;
+    font-weight:600;
+}
+
+.yes{
+    background:#2e8b57;
+}
+
+.yes:hover{
+    background:#246f45;
+}
+
+.neutral{
+    background:#d9a404;
+}
+
+.neutral:hover{
+    background:#b58803;
+}
+
+.no{
+    background:#b22222;
+}
+
+.no:hover{
+    background:#8b1e1e;
+}
+
+/* ==========================================
+   Ergebnis
+========================================== */
+
+#ranking-list{
+    margin:25px 0;
+}
+
+#restart-btn,
+#back-btn{
+    display:block;
+    width:100%;
+    margin-top:25px;
+    padding:15px;
+    border:none;
+    border-radius:12px;
+    background:var(--primary);
+    color:white;
+    font-size:1rem;
+    cursor:pointer;
+}
+
+#restart-btn:hover,
+#back-btn:hover{
+    background:var(--primary-dark);
+}
+
+/* ==========================================
+   Responsive
+========================================== */
+
+@media (max-width:700px){
+
+    .container{
+        margin:15px;
+        padding:0;
+    }
+
+    .screen{
+        padding:25px;
+    }
+
+    h1{
+        font-size:1.6rem;
+    }
+
+    #question-text{
+        min-height:120px;
+        font-size:1.1rem;
+    }
+
+}
