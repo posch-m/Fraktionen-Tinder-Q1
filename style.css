@@ -224,4 +224,42 @@ h1{
         font-size:1.1rem;
     }
 
+}.ranking-item{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+
+    background:white;
+
+    padding:16px;
+
+    margin:12px 0;
+
+    border-radius:12px;
+
+    cursor:pointer;
+
+    transition:.25s;
+}
+
+.ranking-item:hover{
+
+    transform:translateX(6px);
+
+    box-shadow:0 8px 20px rgba(0,0,0,.12);
+
+}
+
+.ranking-left{
+
+    line-height:1.5;
+
+}
+
+.ranking-right{
+
+    font-weight:bold;
+
+    font-size:1.1rem;
+
 }

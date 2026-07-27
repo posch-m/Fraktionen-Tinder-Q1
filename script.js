@@ -144,4 +144,203 @@ function resetScores(){
 
     });
 
+}// ===============================
+// Ergebnisse berechnen
+// ===============================
+
+function showResults() {
+
+    quizScreen.classList.add("hidden");
+    resultScreen.classList.remove("hidden");
+
+    const ranking = Object.entries(state.scores)
+        .sort((a, b) => b[1] - a[1]);
+
+    const winnerKey = ranking[0][0];
+    const winner = factions[winnerKey];
+
+    document.getElementById("winner-name").textContent =
+        winner.name;
+
+    const values = ranking.map(item => item[1]);
+
+const highest = Math.max(...values);
+const lowest = Math.min(...values);
+
+let percentage;
+
+if (highest === lowest) {
+    percentage = 50;
+} else {
+    percentage = Math.round(
+        ((ranking[0][1] - lowest) / (highest - lowest)) * 100
+    );
 }
+
+    document.getElementById("winner-percent").textContent =
+        percentage + "% Übereinstimmung";
+
+    document.getElementById("winner-description").textContent =
+        winner.shortDescription;
+
+    renderRanking(ranking);
+
+}
+
+
+// ===============================
+// Ranking erzeugen
+// ===============================
+
+function renderRanking(ranking) {
+
+    const rankingList =
+        document.getElementById("ranking-list");
+
+    rankingList.innerHTML = "";
+
+    ranking.forEach(([key, score], index) => {
+
+        const faction = factions[key];
+
+        const row = document.createElement("div");
+
+        row.className = "ranking-item";
+
+        row.style.borderLeft =
+            `8px solid ${faction.color}`;
+
+        row.innerHTML = `
+            <div class="ranking-left">
+                <strong>${index + 1}. ${faction.name}</strong><br>
+                <small>${faction.ideology}</small>
+            </div>
+
+            <div class="ranking-right">
+                ${score} Punkte
+            </div>
+        `;
+
+        row.addEventListener("click", () => {
+
+            showProfile(key);
+
+        });
+
+        rankingList.appendChild(row);
+
+    });
+
+}
+
+
+// ===============================
+// Profil anzeigen
+// ===============================
+
+function showProfile(key){
+
+    const faction = factions[key];
+
+    resultScreen.classList.add("hidden");
+    profileScreen.classList.remove("hidden");
+
+    document.getElementById("profile-title").textContent =
+        faction.name;
+
+    document.getElementById("profile-content").innerHTML = `
+
+        <p>${faction.description}</p>
+
+        <h3>Politische Ausrichtung</h3>
+
+        <p>${faction.ideology}</p>
+
+        <h3>Zentrale Positionen</h3>
+
+        <ul>
+
+            ${faction.positions.map(position =>
+                `<li>${position}</li>`
+            ).join("")}
+
+        </ul>
+
+    `;
+
+}// ===============================
+// Buttons
+// ===============================
+
+const restartButton = document.getElementById("restart-btn");
+const backButton = document.getElementById("back-btn");
+
+restartButton.addEventListener("click", restartQuiz);
+backButton.addEventListener("click", backToResults);
+
+
+// ===============================
+// Zurück zur Ergebnisseite
+// ===============================
+
+function backToResults() {
+
+    profileScreen.classList.add("hidden");
+    resultScreen.classList.remove("hidden");
+
+}
+
+
+// ===============================
+// Quiz neu starten
+// ===============================
+
+function restartQuiz() {
+
+    resetScores();
+
+    state.currentQuestion = 0;
+
+    progress.style.width = "0%";
+
+    resultScreen.classList.add("hidden");
+    profileScreen.classList.add("hidden");
+    quizScreen.classList.add("hidden");
+
+    startScreen.classList.remove("hidden");
+
+}
+
+
+// ===============================
+// Tastatursteuerung
+// ===============================
+
+document.addEventListener("keydown", event => {
+
+    if (quizScreen.classList.contains("hidden")) return;
+
+    switch (event.key) {
+
+        case "ArrowLeft":
+            answerQuestion(-1);
+            break;
+
+        case "ArrowDown":
+            answerQuestion(0);
+            break;
+
+        case "ArrowRight":
+            answerQuestion(1);
+            break;
+
+    }
+
+});
+
+
+// ===============================
+// Initialisierung
+// ===============================
+
+progress.style.width = "0%";
