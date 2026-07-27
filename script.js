@@ -2,78 +2,76 @@
 ========================================================
 FraktionsFinder 1848
 script.js
-Version 1.0
+Teil 1 von 3
 ========================================================
 */
 
-// ===============================
-// App-Zustand
-// ===============================
+
+// ======================================================
+// APP-STATUS
+// ======================================================
 
 const state = {
 
     currentQuestion: 0,
 
-    scores: {
-        casino: 0,
-        wuerttembergerhof: 0,
-        landsberg: 0,
-        augsburgerhof: 0,
-        westendhall: 0,
-        deutscherhof: 0,
-        donnersberg: 0,
-        cafemilani: 0
-    }
+    scores: {}
 
 };
 
 
-// ===============================
-// Elemente
-// ===============================
+// Alle Fraktionen automatisch übernehmen
+
+Object.keys(factions).forEach(key => {
+
+    state.scores[key] = 0;
+
+});
+
+
+// ======================================================
+// DOM-ELEMENTE
+// ======================================================
 
 const startScreen = document.getElementById("start-screen");
 const quizScreen = document.getElementById("quiz-screen");
 const resultScreen = document.getElementById("result-screen");
 const profileScreen = document.getElementById("profile-screen");
 
-const startButton = document.getElementById("start-btn");
+const startBtn = document.getElementById("start-btn");
 
-const yesButton = document.getElementById("btn-yes");
-const neutralButton = document.getElementById("btn-neutral");
-const noButton = document.getElementById("btn-no");
-
-const questionText = document.getElementById("question-text");
-const questionCounter = document.getElementById("question-counter");
+const yesBtn = document.getElementById("btn-yes");
+const neutralBtn = document.getElementById("btn-neutral");
+const noBtn = document.getElementById("btn-no");
 
 const progress = document.getElementById("progress");
+const questionCounter = document.getElementById("question-counter");
+const questionText = document.getElementById("question-text");
 
 
-// ===============================
-// Events
-// ===============================
+// ======================================================
+// EVENTS
+// ======================================================
 
-startButton.addEventListener("click", startQuiz);
+startBtn.addEventListener("click", startQuiz);
 
-yesButton.addEventListener("click", () => answerQuestion(1));
-neutralButton.addEventListener("click", () => answerQuestion(0));
-noButton.addEventListener("click", () => answerQuestion(-1));
+yesBtn.addEventListener("click", () => answerQuestion(1));
+neutralBtn.addEventListener("click", () => answerQuestion(0));
+noBtn.addEventListener("click", () => answerQuestion(-1));
 
 
-// ===============================
-// Quiz starten
-// ===============================
+// ======================================================
+// QUIZ STARTEN
+// ======================================================
 
-function startQuiz(){
+function startQuiz() {
 
     resetScores();
 
     state.currentQuestion = 0;
 
     startScreen.classList.add("hidden");
-
     resultScreen.classList.add("hidden");
-
     profileScreen.classList.add("hidden");
 
     quizScreen.classList.remove("hidden");
@@ -83,30 +81,38 @@ function startQuiz(){
 }
 
 
-// ===============================
-// Frage anzeigen
-// ===============================
+// ======================================================
+// FRAGE ANZEIGEN
+// ======================================================
 
-function showQuestion(){
+function showQuestion() {
 
     const question = questions[state.currentQuestion];
 
-    questionText.textContent = question.text;
+    questionText.style.opacity = 0;
 
-    questionCounter.textContent =
-        `Frage ${state.currentQuestion + 1} von ${questions.length}`;
+    setTimeout(() => {
 
-    progress.style.width =
-        `${((state.currentQuestion + 1) / questions.length) * 100}%`;
+        questionText.textContent = question.text;
+
+        questionCounter.textContent =
+            `Frage ${state.currentQuestion + 1} von ${questions.length}`;
+
+        progress.style.width =
+            ((state.currentQuestion + 1) / questions.length * 100) + "%";
+
+        questionText.style.opacity = 1;
+
+    }, 150);
 
 }
 
 
-// ===============================
-// Antwort auswerten
-// ===============================
+// ======================================================
+// ANTWORT VERARBEITEN
+// ======================================================
 
-function answerQuestion(answer){
+function answerQuestion(answer) {
 
     const question = questions[state.currentQuestion];
 
@@ -119,7 +125,7 @@ function answerQuestion(answer){
 
     state.currentQuestion++;
 
-    if(state.currentQuestion >= questions.length){
+    if (state.currentQuestion >= questions.length) {
 
         showResults();
 
@@ -132,168 +138,214 @@ function answerQuestion(answer){
 }
 
 
-// ===============================
-// Punkte zurücksetzen
-// ===============================
+// ======================================================
+// PUNKTE ZURÜCKSETZEN
+// ======================================================
 
-function resetScores(){
+function resetScores() {
 
-    Object.keys(state.scores).forEach(faction =>{
+    Object.keys(state.scores).forEach(faction => {
 
-        state.scores[faction]=0;
+        state.scores[faction] = 0;
 
     });
 
-}// ===============================
-// Ergebnisse berechnen
-// ===============================
+}// ======================================================
+// ERGEBNISSE
+// ======================================================
+
+const winnerCard = document.getElementById("winner-card");
+const winnerName = document.getElementById("winner-name");
+const winnerPercent = document.getElementById("winner-percent");
+const winnerDescription = document.getElementById("winner-description");
+const rankingList = document.getElementById("ranking-list");
+
+
+// ======================================================
+// ERGEBNIS BERECHNEN
+// ======================================================
 
 function showResults() {
 
     quizScreen.classList.add("hidden");
     resultScreen.classList.remove("hidden");
 
-    const ranking = Object.entries(state.scores)
-        .sort((a, b) => b[1] - a[1]);
+    const ranking = calculateRanking();
 
-    const winnerKey = ranking[0][0];
-    const winner = factions[winnerKey];
+    displayWinner(ranking[0]);
 
-    document.getElementById("winner-name").textContent =
-        winner.name;
-
-    const values = ranking.map(item => item[1]);
-
-const highest = Math.max(...values);
-const lowest = Math.min(...values);
-
-let percentage;
-
-if (highest === lowest) {
-    percentage = 50;
-} else {
-    percentage = Math.round(
-        ((ranking[0][1] - lowest) / (highest - lowest)) * 100
-    );
-}
-
-    document.getElementById("winner-percent").textContent =
-        percentage + "% Übereinstimmung";
-
-    document.getElementById("winner-description").textContent =
-        winner.shortDescription;
-
-    renderRanking(ranking);
+    displayRanking(ranking);
 
 }
 
 
-// ===============================
-// Ranking erzeugen
-// ===============================
+// ======================================================
+// RANKING BERECHNEN
+// ======================================================
 
-function renderRanking(ranking) {
+function calculateRanking() {
 
-    const rankingList =
-        document.getElementById("ranking-list");
+    const values = Object.values(state.scores);
 
-    rankingList.innerHTML = "";
+    const min = Math.min(...values);
+    const max = Math.max(...values);
 
-    ranking.forEach(([key, score], index) => {
+    const range = (max - min) || 1;
 
-        const faction = factions[key];
+    const ranking = Object.keys(state.scores).map(key => {
 
-        const row = document.createElement("div");
+        const percent = Math.round(
+            ((state.scores[key] - min) / range) * 100
+        );
 
-        row.className = "ranking-item";
+        return {
 
-        row.style.borderLeft =
-            `8px solid ${faction.color}`;
+            id: key,
 
-        row.innerHTML = `
-            <div class="ranking-left">
-                <strong>${index + 1}. ${faction.name}</strong><br>
-                <small>${faction.ideology}</small>
-            </div>
+            percent: percent,
 
-            <div class="ranking-right">
-                ${score} Punkte
-            </div>
-        `;
+            ...factions[key]
 
-        row.addEventListener("click", () => {
-
-            showProfile(key);
-
-        });
-
-        rankingList.appendChild(row);
+        };
 
     });
 
+    ranking.sort((a, b) => b.percent - a.percent);
+
+    return ranking;
+
 }
 
 
-// ===============================
-// Profil anzeigen
-// ===============================
+// ======================================================
+// SIEGER ANZEIGEN
+// ======================================================
 
-function showProfile(key){
+function displayWinner(winner) {
 
-    const faction = factions[key];
+    winnerCard.style.background = winner.color;
+
+    winnerName.textContent = winner.name;
+
+    winnerPercent.textContent =
+        winner.percent + " % Übereinstimmung";
+
+    winnerDescription.textContent =
+        winner.shortDescription;
+
+}
+
+
+// ======================================================
+// RANKING ANZEIGEN
+// ======================================================
+
+function displayRanking(ranking) {
+
+    rankingList.innerHTML = "";
+
+    ranking.forEach(entry => {
+
+        const item = document.createElement("div");
+        item.className = "ranking-item";
+
+        item.innerHTML = `
+
+            <div class="ranking-label">
+
+                <strong>${entry.name}</strong>
+
+                <span>${entry.percent} %</span>
+
+            </div>
+
+            <div class="bar">
+
+                <div
+                    class="bar-fill"
+                    style="
+                        width:${entry.percent}%;
+                        background:${entry.color};
+                    ">
+                </div>
+
+            </div>
+
+        `;
+
+        item.addEventListener("click", () => {
+
+            openProfile(entry.id);
+
+        });
+
+        rankingList.appendChild(item);
+
+    });
+
+}// ======================================================
+// PROFILSEITE
+// ======================================================
+
+const profileTitle = document.getElementById("profile-title");
+const profileContent = document.getElementById("profile-content");
+const backBtn = document.getElementById("back-btn");
+const restartBtn = document.getElementById("restart-btn");
+
+let currentProfile = null;
+
+
+// ======================================================
+// PROFIL ÖFFNEN
+// ======================================================
+
+function openProfile(id) {
+
+    currentProfile = id;
+
+    const faction = factions[id];
 
     resultScreen.classList.add("hidden");
     profileScreen.classList.remove("hidden");
 
-    document.getElementById("profile-title").textContent =
-        faction.name;
+    profileTitle.textContent = faction.name;
 
-    document.getElementById("profile-content").innerHTML = `
+    profileContent.innerHTML = `
 
         <p>${faction.description}</p>
 
-        <h3>Politische Ausrichtung</h3>
-
-        <p>${faction.ideology}</p>
-
-        <h3>Zentrale Positionen</h3>
+        <h3>Politische Positionen</h3>
 
         <ul>
 
-            ${faction.positions.map(position =>
-                `<li>${position}</li>`
-            ).join("")}
+            ${faction.positions
+                .map(position => `<li>${position}</li>`)
+                .join("")}
 
         </ul>
 
     `;
 
-}// ===============================
-// Buttons
-// ===============================
-
-const restartButton = document.getElementById("restart-btn");
-const backButton = document.getElementById("back-btn");
-
-restartButton.addEventListener("click", restartQuiz);
-backButton.addEventListener("click", backToResults);
+}
 
 
-// ===============================
-// Zurück zur Ergebnisseite
-// ===============================
+// ======================================================
+// ZURÜCK ZUM ERGEBNIS
+// ======================================================
 
-function backToResults() {
+backBtn.addEventListener("click", () => {
 
     profileScreen.classList.add("hidden");
     resultScreen.classList.remove("hidden");
 
-}
+});
 
 
-// ===============================
-// Quiz neu starten
-// ===============================
+// ======================================================
+// QUIZ NEU STARTEN
+// ======================================================
+
+restartBtn.addEventListener("click", restartQuiz);
 
 function restartQuiz() {
 
@@ -312,24 +364,31 @@ function restartQuiz() {
 }
 
 
-// ===============================
-// Tastatursteuerung
-// ===============================
+// ======================================================
+// TASTATURSTEUERUNG
+// ======================================================
 
 document.addEventListener("keydown", event => {
 
-    if (quizScreen.classList.contains("hidden")) return;
+    if (quizScreen.classList.contains("hidden")) {
+
+        return;
+
+    }
 
     switch (event.key) {
 
+        case "1":
         case "ArrowLeft":
             answerQuestion(-1);
             break;
 
+        case "2":
         case "ArrowDown":
             answerQuestion(0);
             break;
 
+        case "3":
         case "ArrowRight":
             answerQuestion(1);
             break;
@@ -339,8 +398,11 @@ document.addEventListener("keydown", event => {
 });
 
 
-// ===============================
-// Initialisierung
-// ===============================
+// ======================================================
+// INITIALISIERUNG
+// ======================================================
 
 progress.style.width = "0%";
+
+questionCounter.textContent =
+    `Frage 1 von ${questions.length}`;

@@ -1,156 +1,187 @@
 /*
-==========================================
+========================================================
 FraktionsFinder 1848
 fraktionen.js
-==========================================
+========================================================
 */
 
 const factions = {
 
     casino: {
-        id: "casino",
+
         name: "Casino",
-        color: "#1E3A8A",
-        ideology: "Konstitutionell-liberal",
-        shortDescription: "Die größte liberale Fraktion der Nationalversammlung.",
+
+        color: "#1f4e79",
+
+        shortDescription:
+            "Du vertrittst gemäßigt liberale Positionen und befürwortest eine konstitutionelle Monarchie.",
 
         description:
-            "Die Casino-Fraktion bildete das politische Zentrum der Frankfurter Nationalversammlung. Sie setzte sich für einen deutschen Nationalstaat mit einer konstitutionellen Monarchie, einem starken Parlament und garantierten Grundrechten ein. Revolutionäre Umstürze lehnte sie jedoch ab.",
+            "Die Fraktion Casino war die größte liberale Gruppierung der Frankfurter Nationalversammlung. Sie setzte sich für einen deutschen Nationalstaat mit einer Verfassung, Grundrechten und einem erblichen Kaiser ein. Revolutionäre Veränderungen lehnte sie überwiegend ab.",
 
         positions: [
             "Konstitutionelle Monarchie",
-            "Starker deutscher Nationalstaat",
-            "Grundrechte",
+            "Erblicher Kaiser",
+            "Liberale Grundrechte",
             "Rechtsstaat",
+            "Nationalstaat",
             "Schrittweise Reformen"
         ]
+
     },
 
     wuerttembergerhof: {
-        id: "wuerttembergerhof",
+
         name: "Württemberger Hof",
-        color: "#2563EB",
-        ideology: "Gemäßigt liberal",
-        shortDescription: "Liberale Mitte mit Reformbereitschaft.",
+
+        color: "#4f81bd",
+
+        shortDescription:
+            "Du stehst für einen gemäßigten Liberalismus mit föderalen Strukturen.",
 
         description:
-            "Der Württemberger Hof unterstützte eine freiheitliche Verfassung und politische Reformen. Veränderungen sollten jedoch innerhalb der bestehenden Ordnung erfolgen.",
+            "Der Württemberger Hof vertrat liberale, aber eher föderale Positionen. Die Rechte der Einzelstaaten sollten erhalten bleiben. Gleichzeitig unterstützte die Fraktion eine Verfassung und die Sicherung der Grundrechte.",
 
         positions: [
-            "Verfassung",
-            "Grundrechte",
+            "Föderalismus",
             "Konstitutionelle Monarchie",
-            "Reformen"
+            "Grundrechte",
+            "Parlamentarische Mitwirkung",
+            "Ausgleich zwischen Fürsten und Parlament"
         ]
+
     },
 
     landsberg: {
-        id: "landsberg",
+
         name: "Landsberg",
-        color: "#16A34A",
-        ideology: "Linksliberal",
-        shortDescription: "Linksliberale Fraktion zwischen Zentrum und Demokratie.",
+
+        color: "#5b9bd5",
+
+        shortDescription:
+            "Du bevorzugst einen liberalen Verfassungsstaat mit stärkerer parlamentarischer Kontrolle.",
 
         description:
-            "Die Fraktion Landsberg trat für mehr parlamentarische Mitbestimmung, eine stärkere Volksvertretung und eine Ausweitung der Freiheitsrechte ein.",
+            "Die Fraktion Landsberg stand zwischen gemäßigten Liberalen und Demokraten. Sie wollte den Einfluss des Parlaments ausbauen und die politische Mitbestimmung erweitern.",
 
         positions: [
-            "Parlament stärken",
+            "Liberale Verfassung",
+            "Starkes Parlament",
             "Mehr Mitbestimmung",
             "Grundrechte",
-            "Liberale Reformen"
+            "Verantwortliche Regierung"
         ]
+
     },
 
     augsburgerhof: {
-        id: "augsburgerhof",
+
         name: "Augsburger Hof",
-        color: "#65A30D",
-        ideology: "Demokratisch",
-        shortDescription: "Demokratische Reformfraktion.",
+
+        color: "#70ad47",
+
+        shortDescription:
+            "Du vertrittst demokratisch-liberale Positionen mit einem starken Parlament.",
 
         description:
-            "Der Augsburger Hof forderte umfassende demokratische Reformen und eine deutliche Stärkung des Parlaments gegenüber der Regierung.",
+            "Der Augsburger Hof gehörte zum linken Zentrum. Er setzte sich für eine weitreichende Parlamentarisierung, demokratische Reformen und eine stärkere Beteiligung der Bevölkerung ein.",
 
         positions: [
-            "Demokratie",
-            "Parlamentarismus",
-            "Allgemeines Wahlrecht",
-            "Bürgerrechte"
+            "Demokratische Reformen",
+            "Parlamentarische Regierung",
+            "Breiteres Wahlrecht",
+            "Grundrechte",
+            "Stärkere Bürgerbeteiligung"
         ]
+
     },
 
     westendhall: {
-        id: "westendhall",
+
         name: "Westendhall",
-        color: "#F59E0B",
-        ideology: "Radikaldemokratisch",
-        shortDescription: "Demokratische Linke mit republikanischen Ideen.",
+
+        color: "#ffc000",
+
+        shortDescription:
+            "Du unterstützt demokratische Reformen und eine deutliche Begrenzung monarchischer Macht.",
 
         description:
-            "Die Westendhall setzte sich für eine demokratische Republik, umfassende Mitbestimmung und weitreichende Freiheitsrechte ein.",
+            "Die Westendhall gehörte zum linken Flügel der Nationalversammlung. Sie trat für demokratische Mitbestimmung, ein möglichst allgemeines Wahlrecht und eine starke Rolle des Parlaments ein.",
 
         positions: [
-            "Republik",
-            "Volkssouveränität",
             "Demokratie",
-            "Allgemeines Wahlrecht"
+            "Allgemeines Wahlrecht",
+            "Parlamentarismus",
+            "Bürgerrechte",
+            "Begrenzung der Monarchie"
         ]
+
     },
 
     deutscherhof: {
-        id: "deutscherhof",
+
         name: "Deutscher Hof",
-        color: "#EA580C",
-        ideology: "Linke Demokratie",
-        shortDescription: "Demokratische Linke mit sozialem Schwerpunkt.",
+
+        color: "#ed7d31",
+
+        shortDescription:
+            "Du vertrittst konsequent demokratische Positionen und möchtest die politische Beteiligung deutlich ausweiten.",
 
         description:
-            "Der Deutsche Hof verband demokratische Forderungen mit sozialpolitischen Reformen und sprach sich für eine republikanische Staatsform aus.",
+            "Der Deutsche Hof war eine linke demokratische Fraktion. Sie forderte weitgehende politische Mitbestimmung, soziale Reformen und eine stärkere Kontrolle der Regierung durch das Parlament.",
 
         positions: [
-            "Republik",
+            "Demokratie",
+            "Allgemeines Wahlrecht",
             "Soziale Reformen",
-            "Parlamentarismus",
-            "Volkssouveränität"
+            "Parlamentarische Kontrolle",
+            "Bürgerrechte"
         ]
+
     },
 
     donnersberg: {
-        id: "donnersberg",
+
         name: "Donnersberg",
-        color: "#DC2626",
-        ideology: "Radikaldemokratisch",
-        shortDescription: "Die linkeste Fraktion der Nationalversammlung.",
+
+        color: "#c00000",
+
+        shortDescription:
+            "Du stehst für eine radikaldemokratische und republikanische Politik.",
 
         description:
-            "Der Donnersberg vertrat die radikalsten demokratischen Positionen der Frankfurter Nationalversammlung. Die Fraktion forderte eine Republik, umfassende Demokratie und tiefgreifende gesellschaftliche Reformen.",
+            "Der Donnersberg war die am weitesten links stehende Fraktion der Frankfurter Nationalversammlung. Sie befürwortete eine Republik, allgemeines Wahlrecht, soziale Reformen und akzeptierte notfalls auch revolutionäre Veränderungen.",
 
         positions: [
             "Republik",
             "Volkssouveränität",
-            "Soziale Reformen",
-            "Demokratie",
-            "Abbau monarchischer Privilegien"
+            "Allgemeines Wahlrecht",
+            "Soziale Gerechtigkeit",
+            "Revolution als letztes Mittel"
         ]
+
     },
 
     cafemilani: {
-        id: "cafemilani",
+
         name: "Café Milani",
-        color: "#6B7280",
-        ideology: "Konservativ",
-        shortDescription: "Konservative Fraktion zur Bewahrung der bestehenden Ordnung.",
+
+        color: "#8064a2",
+
+        shortDescription:
+            "Du nimmst eine vermittelnde Position zwischen Liberalismus und Demokratie ein.",
 
         description:
-            "Das Café Milani vereinte konservative Abgeordnete, die an der monarchischen Ordnung festhalten wollten und tiefgreifenden Reformen skeptisch gegenüberstanden.",
+            "Das Café Milani bildete eine kleinere Gruppierung zwischen liberalen und demokratischen Fraktionen. Es unterstützte Grundrechte, parlamentarische Reformen und eine stärkere politische Beteiligung, suchte dabei aber häufig den Kompromiss.",
 
         positions: [
-            "Monarchie",
-            "Föderalismus",
-            "Erhalt der bestehenden Ordnung",
-            "Vorsichtige Reformen"
+            "Kompromisspolitik",
+            "Grundrechte",
+            "Parlamentarismus",
+            "Mehr Bürgerbeteiligung",
+            "Liberale Reformen"
         ]
+
     }
 
 };
