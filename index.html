@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FraktionsFinder 1848</title>
+
+    <link rel="stylesheet" href="style.css">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+
+    <main class="container">
+
+        <!-- Startseite -->
+
+        <section id="start-screen" class="screen">
+
+            <h1>🏛️ FraktionsFinder 1848</h1>
+
+            <p class="subtitle">
+                Welche Fraktion der Frankfurter Nationalversammlung passt am besten zu deinen politischen Ansichten?
+            </p>
+
+            <button id="start-btn">
+                Quiz starten
+            </button>
+
+        </section>
+
+
+        <!-- Quiz -->
+
+        <section id="quiz-screen" class="screen hidden">
+
+            <div class="progress-wrapper">
+
+                <div class="progress-bar">
+
+                    <div id="progress"></div>
+
+                </div>
+
+                <p id="question-counter">
+                    Frage 1 von 10
+                </p>
+
+            </div>
+
+            <div class="card">
+
+                <h2 id="question-text">
+                    Hier erscheint später die erste Aussage.
+                </h2>
+
+                <div class="button-group">
+
+                    <button id="btn-yes" class="yes">
+                        👍 Stimme zu
+                    </button>
+
+                    <button id="btn-neutral" class="neutral">
+                        🤔 Neutral
+                    </button>
+
+                    <button id="btn-no" class="no">
+                        👎 Stimme nicht zu
+                    </button>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- Ergebnis -->
+
+        <section id="result-screen" class="screen hidden">
+
+            <h1>Dein Ergebnis</h1>
+
+            <h2 id="winner-name"></h2>
+
+            <p id="winner-percent"></p>
+
+            <p id="winner-description"></p>
+
+            <h3>Ranking</h3>
+
+            <div id="ranking-list"></div>
+
+            <button id="restart-btn">
+                Erneut spielen
+            </button>
+
+        </section>
+
+
+        <!-- Fraktionsprofil -->
+
+        <section id="profile-screen" class="screen hidden">
+
+            <h1 id="profile-title"></h1>
+
+            <div id="profile-content"></div>
+
+            <button id="back-btn">
+                ← Zurück
+            </button>
+
+        </section>
+
+    </main>
+
+    <script src="questions.js"></script>
+    <script src="fraktionen.js"></script>
+    <script src="script.js"></script>
+
+</body>
+</html>
