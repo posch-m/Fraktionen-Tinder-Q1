@@ -2,95 +2,106 @@
 ========================================================
 FraktionsFinder 1848
 script.js
-Teil 1 von 4
-Initialisierung
+Teil 1
 ========================================================
 */
 
-/* -----------------------------------------------------
-   DOM-Elemente
------------------------------------------------------ */
+"use strict";
+
+/* ============================================
+   DOM-ELEMENTE
+============================================ */
 
 const startScreen = document.getElementById("start-screen");
 const quizScreen = document.getElementById("quiz-screen");
 const resultScreen = document.getElementById("result-screen");
 const profileScreen = document.getElementById("profile-screen");
 
-const startButton = document.getElementById("start-btn");
-const restartButton = document.getElementById("restart-btn");
-const backButton = document.getElementById("back-btn");
+const startBtn = document.getElementById("start-btn");
 
 const questionText = document.getElementById("question-text");
-
-const yesButton = document.getElementById("yes-btn");
-const neutralButton = document.getElementById("neutral-btn");
-const noButton = document.getElementById("no-btn");
-
-const progressBar = document.getElementById("progress");
 const questionCounter = document.getElementById("question-counter");
+const progressBar = document.getElementById("progress");
 
-/* -----------------------------------------------------
-   Ergebnisfelder
------------------------------------------------------ */
+const yesBtn = document.getElementById("btn-yes");
+const neutralBtn = document.getElementById("btn-neutral");
+const noBtn = document.getElementById("btn-no");
 
 const wingName = document.getElementById("wing-name");
 const wingDescription = document.getElementById("wing-description");
 
-const politicalAxis =
-    document.getElementById("political-axis");
+const politicalAxis = document.getElementById("political-axis");
 
-const winnerName =
-    document.getElementById("winner-name");
+const winnerName = document.getElementById("winner-name");
+const winnerPercent = document.getElementById("winner-percent");
+const winnerDescription = document.getElementById("winner-description");
 
-const winnerPercent =
-    document.getElementById("winner-percent");
+const historyText = document.getElementById("history-text");
 
-const winnerDescription =
-    document.getElementById("winner-description");
+const rankingList = document.getElementById("ranking-list");
 
-const historyText =
-    document.getElementById("history-text");
+const restartBtn = document.getElementById("restart-btn");
 
-const rankingList =
-    document.getElementById("ranking-list");
+const profileTitle = document.getElementById("profile-title");
+const profileContent = document.getElementById("profile-content");
+const backBtn = document.getElementById("back-btn");
 
-const profileTitle =
-    document.getElementById("profile-title");
 
-const profileContent =
-    document.getElementById("profile-content");
-
-/* -----------------------------------------------------
-   Quizstatus
------------------------------------------------------ */
+/* ============================================
+   QUIZSTATUS
+============================================ */
 
 let currentQuestion = 0;
 
-let quizFinished = false;
+let scores = {};
 
 let ranking = [];
 
 let winner = null;
 
-/* -----------------------------------------------------
-   Punktestand
------------------------------------------------------ */
 
-const scores = {};
+/* ============================================
+   STARTWERTE
+============================================ */
 
-Object.keys(factions).forEach(id => {
+function initializeScores() {
 
-    scores[id] = 0;
+    scores = {};
 
-});
+    Object.keys(factions).forEach(key => {
 
-/* -----------------------------------------------------
-   Quiz starten
------------------------------------------------------ */
+        scores[key] = 0;
 
-function startQuiz(){
+    });
 
-    resetQuiz();
+}
+
+
+/* ============================================
+   BILDSCHIRME
+============================================ */
+
+function showScreen(screen) {
+
+    startScreen.classList.add("hidden");
+    quizScreen.classList.add("hidden");
+    resultScreen.classList.add("hidden");
+    profileScreen.classList.add("hidden");
+
+    screen.classList.remove("hidden");
+
+}
+
+
+/* ============================================
+   QUIZ STARTEN
+============================================ */
+
+function startQuiz() {
+
+    initializeScores();
+
+    currentQuestion = 0;
 
     showScreen(quizScreen);
 
@@ -98,299 +109,125 @@ function startQuiz(){
 
 }
 
-/* -----------------------------------------------------
-   Bildschirm wechseln
------------------------------------------------------ */
 
-function showScreen(screen){
+/* ============================================
+   FRAGE LADEN
+============================================ */
 
-    startScreen.classList.add("hidden");
+function loadQuestion() {
 
-    quizScreen.classList.add("hidden");
+    const question = questions[currentQuestion];
 
-    resultScreen.classList.add("hidden");
+    questionText.textContent = question.text;
 
-    profileScreen.classList.add("hidden");
-
-    screen.classList.remove("hidden");
-
-}
-
-/* -----------------------------------------------------
-   Frage laden
------------------------------------------------------ */
-
-function loadQuestion(){
-
-    const question =
-        questions[currentQuestion];
-
-    if(!question){
-
-        finishQuiz();
-
-        return;
-
-    }
-
-    questionText.textContent =
-        question.text;
+    questionCounter.textContent =
+        `Frage ${currentQuestion + 1} von ${questions.length}`;
 
     updateProgress();
 
 }
 
-/* -----------------------------------------------------
-   Fortschrittsanzeige
------------------------------------------------------ */
 
-function updateProgress(){
+/* ============================================
+   FORTSCHRITT
+============================================ */
 
-    const percentage =
-        (currentQuestion / questions.length) * 100;
+function updateProgress() {
 
-    progressBar.style.width =
-        percentage + "%";
+    const percent =
+        ((currentQuestion) / questions.length) * 100;
 
-    questionCounter.textContent =
-        (currentQuestion + 1) +
-        " / " +
-        questions.length;
+    progressBar.style.width = percent + "%";
 
 }
 
-/* -----------------------------------------------------
-   Quiz zurücksetzen
------------------------------------------------------ */
 
-function resetQuiz(){
+/* ============================================
+   BUTTONS
+============================================ */
 
-    currentQuestion = 0;
+startBtn.addEventListener("click", startQuiz);
 
-    quizFinished = false;
+yesBtn.addEventListener("click", () => {
 
-    ranking = [];
+    answerQuestion("yes");
 
-    winner = null;
+});
 
-    Object.keys(scores).forEach(id=>{
+neutralBtn.addEventListener("click", () => {
 
-        scores[id]=0;
+    answerQuestion("neutral");
 
-    });
+});
 
-    progressBar.style.width = "0%";
+noBtn.addEventListener("click", () => {
 
-}
+    answerQuestion("no");
 
-/* -----------------------------------------------------
-   Hilfsfunktionen
------------------------------------------------------ */
+});
 
-function clamp(value,min,max){
+restartBtn.addEventListener("click", startQuiz);
 
-    return Math.max(min,Math.min(max,value));
+backBtn.addEventListener("click", () => {
 
-}
+    showScreen(resultScreen);
 
-function percentage(value,max){
+});/* ============================================
+   ANTWORT AUSWERTEN
+============================================ */
 
-    if(max===0){
-
-        return 0;
-
-    }
-
-    return Math.round((value/max)*100);
-
-}
-
-/* -----------------------------------------------------
-   EventListener
------------------------------------------------------ */
-
-startButton.addEventListener(
-
-    "click",
-
-    startQuiz
-
-);
-
-restartButton.addEventListener(
-
-    "click",
-
-    ()=>{
-
-        showScreen(startScreen);
-
-        resetQuiz();
-
-    }
-
-);
-
-backButton.addEventListener(
-
-    "click",
-
-    ()=>{
-
-        showScreen(resultScreen);
-
-    }
-
-);
-
-yesButton.addEventListener(
-
-    "click",
-
-    ()=>answerQuestion("yes")
-
-);
-
-neutralButton.addEventListener(
-
-    "click",
-
-    ()=>answerQuestion("neutral")
-
-);
-
-noButton.addEventListener(
-
-    "click",
-
-    ()=>answerQuestion("no")
-
-);
-
-/* -----------------------------------------------------
-   Tastatursteuerung
------------------------------------------------------ */
-
-document.addEventListener(
-
-    "keydown",
-
-    event=>{
-
-        if(quizScreen.classList.contains("hidden")){
-
-            return;
-
-        }
-
-        if(event.key==="1"){
-
-            answerQuestion("yes");
-
-        }
-
-        if(event.key==="2"){
-
-            answerQuestion("neutral");
-
-        }
-
-        if(event.key==="3"){
-
-            answerQuestion("no");
-
-        }
-
-    }
-
-);
-
-/*
-========================================================
-Ende Teil 1
-========================================================
-*//* ========================================================
-   Teil 2
-   Antworten auswerten und Quiz abschließen
-======================================================== */
-
-/* --------------------------------------------------------
-   Antwort verarbeiten
--------------------------------------------------------- */
-
-function answerQuestion(answer){
-
-    if(quizFinished){
-        return;
-    }
+function answerQuestion(answer) {
 
     const question = questions[currentQuestion];
 
-    evaluateWeights(question, answer);
+    Object.keys(question.weights).forEach(key => {
 
-    currentQuestion++;
+        const value = question.weights[key];
 
-    if(currentQuestion >= questions.length){
-
-        finishQuiz();
-
-        return;
-
-    }
-
-    loadQuestion();
-
-}
-
-/* --------------------------------------------------------
-   Gewichtungen auswerten
--------------------------------------------------------- */
-
-function evaluateWeights(question, answer){
-
-    Object.entries(question.weights).forEach(([id,value])=>{
-
-        let points = value;
-
-        switch(answer){
+        switch (answer) {
 
             case "yes":
-
-                points = value;
-
+                scores[key] += value;
                 break;
 
             case "neutral":
-
-                points = Math.round(value / 2);
-
+                scores[key] += value / 2;
                 break;
 
             case "no":
-
-                points = value * (-1);
-
+                scores[key] -= value;
                 break;
 
         }
 
-        scores[id] += points;
-
     });
+
+    currentQuestion++;
+
+    if (currentQuestion >= questions.length) {
+
+        finishQuiz();
+
+    } else {
+
+        loadQuestion();
+
+    }
 
 }
 
-/* --------------------------------------------------------
-   Maximale Punktzahl bestimmen
--------------------------------------------------------- */
 
-function calculateMaximumScore(){
+/* ============================================
+   MAXIMALPUNKTE
+============================================ */
+
+function calculateMaximumScore() {
 
     let max = 0;
 
-    questions.forEach(question=>{
+    questions.forEach(question => {
 
-        Object.values(question.weights).forEach(value=>{
+        Object.values(question.weights).forEach(value => {
 
             max += Math.abs(value);
 
@@ -402,101 +239,106 @@ function calculateMaximumScore(){
 
 }
 
-/* --------------------------------------------------------
-   Ranking berechnen
--------------------------------------------------------- */
 
-function calculateRanking(){
+/* ============================================
+   RANKING BERECHNEN
+============================================ */
 
-    ranking = [];
+function calculateRanking() {
 
     const maxScore = calculateMaximumScore();
 
-    Object.entries(factions).forEach(([id,data])=>{
+    ranking = [];
 
-        const percent = percentage(
+    Object.keys(scores).forEach(id => {
 
-            scores[id] + maxScore,
+        const faction = factions[id];
 
-            maxScore * 2
+        const rawScore = scores[id];
 
+        const percent = Math.max(
+            0,
+            Math.round(((rawScore + maxScore) / (2 * maxScore)) * 100)
         );
 
         ranking.push({
 
-            id:id,
+            id: id,
 
-            score:scores[id],
+            name: faction.name,
 
-            percent:percent,
+            wing: faction.wing,
 
-            ...data
+            ideology: faction.ideology,
+
+            color: faction.color,
+
+            shortDescription: faction.shortDescription,
+
+            description: faction.description,
+
+            representatives: faction.representatives,
+
+            positions: faction.positions,
+
+            score: rawScore,
+
+            percent: percent
 
         });
 
     });
 
-    ranking.sort((a,b)=>{
-
-        return b.percent-a.percent;
-
-    });
+    ranking.sort((a, b) => b.percent - a.percent);
 
     winner = ranking[0];
 
 }
 
-/* --------------------------------------------------------
-   Quiz abschließen
--------------------------------------------------------- */
 
-function finishQuiz(){
+/* ============================================
+   QUIZ BEENDEN
+============================================ */
 
-    quizFinished = true;
+function finishQuiz() {
 
-    progressBar.style.width="100%";
+    progressBar.style.width = "100%";
 
     calculateRanking();
 
-    showScreen(resultScreen);
-
     renderResults();
+
+    showScreen(resultScreen);
 
 }
 
-/* --------------------------------------------------------
-   Ergebnisse anzeigen
--------------------------------------------------------- */
 
-function renderResults(){
+/* ============================================
+   ERGEBNISSE
+============================================ */
 
-    renderWinner();
+function renderResults() {
 
     renderWing();
 
     renderAxis();
 
+    renderWinner();
+
     renderHistory();
 
     renderRanking();
 
-}/* ========================================================
-   Teil 3
-   Ergebnisdarstellung
-======================================================== */
+}
 
-/* --------------------------------------------------------
-   Siegerkarte
--------------------------------------------------------- */
 
-function renderWinner(){
+/* ============================================
+   SIEGER
+============================================ */
 
-    if(!winner){
-        return;
-    }
+function renderWinner() {
 
-    winnerName.textContent =
-        winner.name;
+    winnerName.textContent = winner.name;
 
     winnerPercent.textContent =
         winner.percent + " % Übereinstimmung";
@@ -504,266 +346,157 @@ function renderWinner(){
     winnerDescription.textContent =
         winner.shortDescription;
 
-    const card =
-        document.getElementById("winner-card");
+}/* ============================================
+   POLITISCHER FLÜGEL
+============================================ */
 
-    if(card){
+function renderWing() {
 
-        card.style.background = winner.color;
-
-        card.style.color = "#ffffff";
-
-    }
+    wingName.textContent = winner.wing;
+    wingDescription.textContent = winner.ideology;
 
 }
 
-/* --------------------------------------------------------
-   Politischen Flügel aus ideology ableiten
--------------------------------------------------------- */
 
-function renderWing(){
+/* ============================================
+   POLITISCHE ACHSE
+============================================ */
 
-    if(!winner){
-        return;
-    }
-
-    let title = winner.ideology;
-    let description = "";
-
-    const ideology =
-        winner.ideology.toLowerCase();
-
-    if(ideology.includes("konservativ")){
-
-        description =
-        "Diese Fraktion vertrat überwiegend konservative Positionen und setzte auf Stabilität, eine konstitutionelle Monarchie und einen vorsichtigen politischen Wandel.";
-
-    }else if(ideology.includes("liberal")){
-
-        description =
-        "Diese Fraktion gehörte zum liberalen Spektrum und trat besonders für Freiheitsrechte, Rechtsstaatlichkeit und eine nationale Einigung ein.";
-
-    }else if(
-        ideology.includes("demokrat")
-    ){
-
-        description =
-        "Diese Fraktion verfolgte demokratische Reformen und wollte die politische Mitbestimmung der Bevölkerung deutlich ausbauen.";
-
-    }else if(
-        ideology.includes("radikal")
-    ){
-
-        description =
-        "Diese Fraktion gehörte zum radikaldemokratischen Lager und war bereit, tiefgreifende gesellschaftliche Veränderungen durchzusetzen.";
-
-    }else{
-
-        description =
-        winner.shortDescription;
-
-    }
-
-    wingName.textContent = title;
-
-    wingDescription.textContent = description;
-
-}
-
-/* --------------------------------------------------------
-   Politische Achse
--------------------------------------------------------- */
-
-function renderAxis(){
+function renderAxis() {
 
     politicalAxis.innerHTML = "";
 
-    const bar = document.createElement("div");
-
-    bar.className = "axis";
-
-    bar.innerHTML = `
-
-        <div class="axis-radikal"></div>
-        <div class="axis-demokratisch"></div>
-        <div class="axis-liberal"></div>
-        <div class="axis-konservativ"></div>
-
-    `;
+    const axis = document.createElement("div");
+    axis.className = "axis";
 
     const marker = document.createElement("div");
-
     marker.className = "axis-marker";
 
     let position = 50;
 
-    const ideology =
-        winner.ideology.toLowerCase();
+    switch (winner.wing) {
 
-    if(ideology.includes("radikal")){
+        case "Konservativ-liberaler Flügel":
+            position = 15;
+            break;
 
-        position = 12;
+        case "Liberales Zentrum":
+            position = 40;
+            break;
 
-    }else if(
-        ideology.includes("demokrat")
-    ){
+        case "Demokratischer Flügel":
+            position = 70;
+            break;
 
-        position = 35;
-
-    }else if(
-        ideology.includes("liberal")
-    ){
-
-        position = 65;
-
-    }else if(
-        ideology.includes("konservativ")
-    ){
-
-        position = 88;
+        case "Radikaldemokratischer Flügel":
+            position = 90;
+            break;
 
     }
 
-    marker.style.left =
-        position + "%";
+    marker.style.left = position + "%";
 
-    marker.innerHTML =
-        "<span>" + winner.name + "</span>";
+    const left = document.createElement("span");
+    left.className = "axis-left";
+    left.textContent = "Konservativ";
 
-    const labels =
-        document.createElement("div");
+    const right = document.createElement("span");
+    right.className = "axis-right";
+    right.textContent = "Radikaldemokratisch";
 
-    labels.className =
-        "axis-labels";
+    axis.appendChild(marker);
 
-    labels.innerHTML = `
-
-        <span>Radikal</span>
-        <span>Demokratisch</span>
-        <span>Liberal</span>
-        <span>Konservativ</span>
-
-    `;
-
-    politicalAxis.appendChild(bar);
-
-    politicalAxis.appendChild(marker);
-
-    politicalAxis.appendChild(labels);
+    politicalAxis.appendChild(left);
+    politicalAxis.appendChild(axis);
+    politicalAxis.appendChild(right);
 
 }
 
-/* --------------------------------------------------------
-   Historische Einordnung
--------------------------------------------------------- */
 
-function renderHistory(){
+/* ============================================
+   HISTORISCHE EINORDNUNG
+============================================ */
+
+function renderHistory() {
 
     historyText.textContent =
         winner.description;
 
 }
 
-/* --------------------------------------------------------
-   Ranking
--------------------------------------------------------- */
 
-function renderRanking(){
+/* ============================================
+   RANKING
+============================================ */
+
+function renderRanking() {
 
     rankingList.innerHTML = "";
 
-    ranking.forEach((entry,index)=>{
+    ranking.forEach(entry => {
 
-        const item =
-            document.createElement("div");
+        const card = document.createElement("div");
 
-        item.className =
-            "ranking-item";
+        card.className = "ranking-item";
 
-        item.innerHTML = `
+        card.style.borderLeft =
+            "8px solid " + entry.color;
 
-            <div class="ranking-label">
+        card.innerHTML = `
 
-                <strong>
+            <div class="ranking-top">
 
-                    ${index+1}. ${entry.name}
+                <strong>${entry.name}</strong>
 
-                </strong>
-
-                <span>
-
-                    ${entry.percent} %
-
-                </span>
+                <span>${entry.percent}%</span>
 
             </div>
 
-            <div class="bar">
+            <div class="ranking-bottom">
 
-                <div
-                    class="bar-fill"
-                    style="
-                        width:${entry.percent}%;
-                        background:${entry.color};
-                    ">
-                </div>
+                ${entry.wing}
 
             </div>
 
         `;
 
-        item.addEventListener(
+        card.addEventListener("click", () => {
 
-            "click",
+            openProfile(entry.id);
 
-            ()=>{
+        });
 
-                openProfile(entry.id);
-
-            }
-
-        );
-
-        rankingList.appendChild(item);
+        rankingList.appendChild(card);
 
     });
 
 }
 
-/* --------------------------------------------------------
-   Profil öffnen
--------------------------------------------------------- */
 
-function openProfile(id){
+/* ============================================
+   FRAKTIONSPROFIL
+============================================ */
 
-    const faction =
-        factions[id];
+function openProfile(id) {
 
-    if(!faction){
+    const faction = factions[id];
 
-        return;
-
-    }
-
-    profileTitle.textContent =
-        faction.name;
+    profileTitle.textContent = faction.name;
 
     profileContent.innerHTML = `
 
-        <h2>${faction.name}</h2>
-
         <p>
-
-            ${faction.description}
-
+            <strong>Politische Einordnung:</strong><br>
+            ${faction.wing}
         </p>
 
-        <h3>Ideologie</h3>
+        <p>
+            <strong>Ideologie:</strong><br>
+            ${faction.ideology}
+        </p>
 
         <p>
-
-            ${faction.ideology}
-
+            ${faction.description}
         </p>
 
         <h3>Bekannte Vertreter</h3>
@@ -771,17 +504,17 @@ function openProfile(id){
         <ul>
 
             ${faction.representatives
-                .map(name=>`<li>${name}</li>`)
+                .map(person => `<li>${person}</li>`)
                 .join("")}
 
         </ul>
 
-        <h3>Politische Positionen</h3>
+        <h3>Zentrale Positionen</h3>
 
         <ul>
 
             ${faction.positions
-                .map(item=>`<li>${item}</li>`)
+                .map(position => `<li>${position}</li>`)
                 .join("")}
 
         </ul>
@@ -790,395 +523,142 @@ function openProfile(id){
 
     showScreen(profileScreen);
 
-}
+}/* ============================================
+   QUIZ ZURÜCKSETZEN
+============================================ */
 
-/* ========================================================
-   Ende Teil 3
-======================================================== *//* ========================================================
-   Teil 4
-   Animationen, Hilfsfunktionen und Abschluss
-======================================================== */
+function resetQuiz() {
 
-/* --------------------------------------------------------
-   Fortschrittsbalken animieren
--------------------------------------------------------- */
+    currentQuestion = 0;
 
-function animateProgress(){
+    initializeScores();
 
-    progressBar.animate(
+    ranking = [];
 
-        [
+    winner = null;
 
-            {
-                transform: "scaleX(.98)"
-            },
-
-            {
-                transform: "scaleX(1)"
-            }
-
-        ],
-
-        {
-
-            duration: 180,
-
-            easing: "ease-out"
-
-        }
-
-    );
+    progressBar.style.width = "0%";
 
 }
 
-/* --------------------------------------------------------
-   Ergebniskarten animieren
--------------------------------------------------------- */
 
-function animateResults(){
+/* ============================================
+   QUIZ NEU STARTEN
+============================================ */
 
-    const cards = document.querySelectorAll(
-
-        ".result-card"
-
-    );
-
-    cards.forEach((card,index)=>{
-
-        card.style.opacity = "0";
-
-        card.style.transform = "translateY(20px)";
-
-        setTimeout(()=>{
-
-            card.style.transition = ".45s";
-
-            card.style.opacity = "1";
-
-            card.style.transform = "translateY(0)";
-
-        },index*120);
-
-    });
-
-}
-
-/* --------------------------------------------------------
-   Profil schließen
--------------------------------------------------------- */
-
-function closeProfile(){
-
-    showScreen(resultScreen);
-
-}
-
-/* --------------------------------------------------------
-   Rangliste sortieren (Sicherheit)
--------------------------------------------------------- */
-
-function sortRanking(){
-
-    ranking.sort((a,b)=>{
-
-        if(b.percent===a.percent){
-
-            return b.score-a.score;
-
-        }
-
-        return b.percent-a.percent;
-
-    });
-
-}
-
-/* --------------------------------------------------------
-   Ergebnisse aktualisieren
--------------------------------------------------------- */
-
-function refreshResults(){
-
-    sortRanking();
-
-    winner = ranking[0];
-
-    renderWinner();
-
-    renderWing();
-
-    renderAxis();
-
-    renderHistory();
-
-    renderRanking();
-
-}
-
-/* --------------------------------------------------------
-   Karten weich einblenden
--------------------------------------------------------- */
-
-function fadeIn(element){
-
-    element.style.opacity = "0";
-
-    element.style.transition = ".4s";
-
-    requestAnimationFrame(()=>{
-
-        element.style.opacity = "1";
-
-    });
-
-}
-
-/* --------------------------------------------------------
-   Gesamtes Ergebnis anzeigen
--------------------------------------------------------- */
-
-function displayResults(){
-
-    refreshResults();
-
-    animateResults();
-
-    fadeIn(resultScreen);
-
-}
-
-/* --------------------------------------------------------
-   Ergebnis exportieren
--------------------------------------------------------- */
-
-function createResultText(){
-
-    return `
-
-FraktionsFinder 1848
-
-Beste Übereinstimmung:
-
-${winner.name}
-
-Übereinstimmung:
-
-${winner.percent} %
-
-Ideologie:
-
-${winner.ideology}
-
-Kurzbeschreibung:
-
-${winner.shortDescription}
-
-`;
-
-}
-
-/* --------------------------------------------------------
-   In Zwischenablage kopieren
--------------------------------------------------------- */
-
-async function copyResult(){
-
-    try{
-
-        await navigator.clipboard.writeText(
-
-            createResultText()
-
-        );
-
-        console.log(
-
-            "Ergebnis kopiert."
-
-        );
-
-    }
-
-    catch(error){
-
-        console.warn(error);
-
-    }
-
-}
-
-/* --------------------------------------------------------
-   Debugmodus
--------------------------------------------------------- */
-
-function printScores(){
-
-    console.table(scores);
-
-}
-
-/* --------------------------------------------------------
-   Neustart
--------------------------------------------------------- */
-
-function restartQuizCompletely(){
+restartBtn.addEventListener("click", () => {
 
     resetQuiz();
 
-    showScreen(startScreen);
+    startQuiz();
 
-}
+});
 
-/* --------------------------------------------------------
-   Resize-Handler
--------------------------------------------------------- */
 
-window.addEventListener(
+/* ============================================
+   TASTATURSTEUERUNG
+============================================ */
 
-    "resize",
+document.addEventListener("keydown", (event) => {
 
-    ()=>{
+    if (!quizScreen.classList.contains("hidden")) {
 
-        if(
+        switch (event.key) {
 
-            !resultScreen.classList.contains(
+            case "1":
+            case "ArrowLeft":
+                answerQuestion("yes");
+                break;
 
-                "hidden"
+            case "2":
+            case "ArrowUp":
+                answerQuestion("neutral");
+                break;
 
-            )
-
-        ){
-
-            renderAxis();
+            case "3":
+            case "ArrowRight":
+                answerQuestion("no");
+                break;
 
         }
 
     }
 
-);
+});
 
-/* --------------------------------------------------------
-   Initialisierung
--------------------------------------------------------- */
 
-document.addEventListener(
+/* ============================================
+   KLEINE ANIMATIONEN
+============================================ */
 
-    "DOMContentLoaded",
+function fadeIn(element) {
 
-    ()=>{
+    element.style.opacity = 0;
 
-        showScreen(startScreen);
+    let opacity = 0;
 
-    }
+    const timer = setInterval(() => {
 
-);
+        opacity += 0.08;
 
-/* --------------------------------------------------------
-   Überschreiben von finishQuiz
--------------------------------------------------------- */
+        element.style.opacity = opacity;
 
-const originalFinishQuiz = finishQuiz;
+        if (opacity >= 1) {
 
-finishQuiz = function(){
+            clearInterval(timer);
 
-    originalFinishQuiz();
+        }
 
-    displayResults();
+    }, 15);
+
+}
+
+
+/* ============================================
+   ERGEBNISSE ANIMIEREN
+============================================ */
+
+const originalRenderResults = renderResults;
+
+renderResults = function () {
+
+    originalRenderResults();
+
+    fadeIn(document.getElementById("wing-card"));
+    fadeIn(document.getElementById("axis-card"));
+    fadeIn(document.getElementById("winner-card"));
+    fadeIn(document.getElementById("history-card"));
+    fadeIn(document.getElementById("ranking-list"));
 
 };
 
-/* --------------------------------------------------------
-   Überschreiben von updateProgress
--------------------------------------------------------- */
 
-const originalUpdateProgress = updateProgress;
+/* ============================================
+   SICHERHEITSPRÜFUNGEN
+============================================ */
 
-updateProgress = function(){
+if (typeof questions === "undefined") {
 
-    originalUpdateProgress();
-
-    animateProgress();
-
-};
-
-/* --------------------------------------------------------
-   Buttons ergänzen
--------------------------------------------------------- */
-
-if(restartButton){
-
-    restartButton.addEventListener(
-
-        "click",
-
-        restartQuizCompletely
-
-    );
+    console.error("questions.js wurde nicht geladen.");
 
 }
 
-if(backButton){
+if (typeof factions === "undefined") {
 
-    backButton.addEventListener(
-
-        "click",
-
-        closeProfile
-
-    );
+    console.error("fraktionen.js wurde nicht geladen.");
 
 }
 
-/* --------------------------------------------------------
-   Tastenkürzel
--------------------------------------------------------- */
 
-document.addEventListener(
+/* ============================================
+   INITIALISIERUNG
+============================================ */
 
-    "keydown",
+initializeScores();
 
-    event=>{
+showScreen(startScreen);
 
-        if(event.key==="Escape"){
 
-            if(
-
-                !profileScreen.classList.contains(
-
-                    "hidden"
-
-                )
-
-            ){
-
-                closeProfile();
-
-            }
-
-        }
-
-        if(event.key==="r"){
-
-            if(
-
-                !resultScreen.classList.contains(
-
-                    "hidden"
-
-                )
-
-            ){
-
-                restartQuizCompletely();
-
-            }
-
-        }
-
-    }
-
-);
-
-/* ========================================================
-   Ende script.js
-======================================================== */
+/* ============================================
+   ENDE
+============================================ */
