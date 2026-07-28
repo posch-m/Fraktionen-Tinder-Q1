@@ -1,115 +1,226 @@
 <!DOCTYPE html>
 <html lang="de">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>FraktionsFinder 1848</title>
-<link rel="stylesheet" href="style.css">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>FraktionsFinder 1848</title>
+
+    <link rel="stylesheet" href="style.css">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+
 </head>
+
 <body>
 
-<main class="container">
+    <main class="container">
 
-<section id="start-screen" class="screen">
-<div class="hero">
-<h1>🏛️ FraktionsFinder 1848</h1>
-<p class="subtitle">
-Welche politische Strömung der Frankfurter Nationalversammlung
-entspricht deinen Ansichten?
-</p>
-<button id="start-btn">Quiz starten</button>
-</div>
+        <!-- ===========================
+             STARTSEITE
+        ============================ -->
 
-<div class="info-box">
-<h3>So funktioniert's</h3>
-<p>
-Beantworte die Aussagen. Anschließend erhältst du zuerst deinen
-politischen Flügel und danach die Fraktion, die am besten zu deinen
-Antworten passt.
-</p>
-</div>
+        <section id="start-screen" class="screen">
 
-<footer class="footer">
-<p>FraktionsFinder 1848 · Geschichtsunterricht</p>
-<div class="qr-placeholder">
-<img src="assets/qr-code.png" id="qr-code" alt="QR-Code">
-</div>
-</footer>
-</section>
+            <div class="hero">
 
-<section id="quiz-screen" class="screen hidden">
-<div class="progress-wrapper">
-<div class="progress-bar">
-<div id="progress"></div>
-</div>
-<p id="question-counter"></p>
-</div>
+                <h1>🏛️ FraktionsFinder 1848</h1>
 
-<div class="card">
-<h2 id="question-text"></h2>
+                <p class="subtitle">
+                    Welche politische Strömung der Frankfurter
+                    Nationalversammlung von 1848 entspricht
+                    deinen politischen Ansichten?
+                </p>
 
-<div class="button-group">
-<button id="btn-yes" class="yes">👍 Stimme zu</button>
-<button id="btn-neutral" class="neutral">🤔 Neutral</button>
-<button id="btn-no" class="no">👎 Stimme nicht zu</button>
-</div>
-</div>
-</section>
+                <button id="start-btn">
+                    Quiz starten
+                </button>
 
-<section id="result-screen" class="screen hidden">
+            </div>
 
-<div class="result-card" id="wing-card">
-<h2>Dein politischer Flügel</h2>
-<h1 id="wing-name"></h1>
-<p id="wing-description"></p>
-</div>
+            <div class="info-box">
 
-<div class="result-card" id="axis-card">
-<h2>Politisches Spektrum</h2>
-<div id="political-axis"></div>
-</div>
+                <h3>So funktioniert's</h3>
 
-<div class="result-card">
-<h2>Passendste Fraktion</h2>
-<div id="winner-card">
-<h1 id="winner-name"></h1>
-<div id="winner-percent"></div>
-<p id="winner-description"></p>
-</div>
-</div>
+                <p>
+                    Beantworte zehn politische Aussagen.
+                    Anschließend erhältst du zunächst deinen
+                    politischen Flügel innerhalb der Frankfurter
+                    Nationalversammlung und danach die Fraktion,
+                    deren Positionen deinen Antworten am nächsten
+                    kommen.
+                </p>
 
-<div class="result-card" id="history-card">
-<h2>Historische Einordnung</h2>
-<p id="history-text"></p>
-</div>
+            </div>
 
-<div class="result-card">
-<h2>Übereinstimmung aller Fraktionen</h2>
-<div id="ranking-list"></div>
-</div>
+            <footer class="footer">
 
-<div class="result-buttons">
-<button id="restart-btn">Quiz neu starten</button>
-</div>
+                <p>
+                    FraktionsFinder 1848 · Geschichtsunterricht
+                </p>
 
-</section>
+                <div class="qr-placeholder">
 
-<section id="profile-screen" class="screen hidden">
-<div class="profile-card">
-<h1 id="profile-title"></h1>
-<div id="profile-content"></div>
-<button id="back-btn">← Zurück zum Ergebnis</button>
-</div>
-</section>
+                    <img
+                        src="assets/qr-code.png"
+                        alt="QR-Code"
+                        id="qr-code">
 
-</main>
+                </div>
 
-<script src="questions.js"></script>
-<script src="fraktionen.js"></script>
-<script src="script.js"></script>
+            </footer>
+
+        </section>
+
+
+        <!-- ===========================
+             QUIZ
+        ============================ -->
+
+        <section id="quiz-screen" class="screen hidden">
+
+            <div class="progress-wrapper">
+
+                <div class="progress-bar">
+
+                    <div id="progress"></div>
+
+                </div>
+
+                <p id="question-counter"></p>
+
+            </div>
+
+            <div class="card">
+
+                <h2 id="question-text"></h2>
+
+                <div class="button-group">
+
+                    <button id="btn-yes" class="yes">
+                        👍 Stimme zu
+                    </button>
+
+                    <button id="btn-neutral" class="neutral">
+                        🤔 Neutral
+                    </button>
+
+                    <button id="btn-no" class="no">
+                        👎 Stimme nicht zu
+                    </button>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- ===========================
+             ERGEBNIS
+        ============================ -->
+
+        <section id="result-screen" class="screen hidden">
+
+            <div class="result-card" id="wing-card">
+
+                <h2>Dein politischer Flügel</h2>
+
+                <h1 id="wing-name"></h1>
+
+                <p id="wing-description"></p>
+
+            </div>
+
+            <div class="result-card" id="axis-card">
+
+                <h2>Politisches Spektrum</h2>
+
+                <div id="political-axis"></div>
+
+            </div>
+                        <div class="result-card">
+
+                <h2>Passendste Fraktion</h2>
+
+                <div id="winner-card">
+
+                    <h1 id="winner-name"></h1>
+
+                    <div id="winner-percent"></div>
+
+                    <p id="winner-description"></p>
+
+                </div>
+
+            </div>
+
+            <div class="result-card" id="history-card">
+
+                <h2>Historische Einordnung</h2>
+
+                <p id="history-text"></p>
+
+            </div>
+
+            <div class="result-card">
+
+                <h2>Übereinstimmung aller Fraktionen</h2>
+
+                <div id="ranking-list">
+
+                </div>
+
+            </div>
+
+            <div class="result-buttons">
+
+                <button id="restart-btn">
+
+                    Quiz neu starten
+
+                </button>
+
+            </div>
+
+        </section>
+
+
+        <!-- ===========================
+             FRAKTIONSPROFIL
+        ============================ -->
+
+        <section id="profile-screen" class="screen hidden">
+
+            <div class="profile-card">
+
+                <h1 id="profile-title"></h1>
+
+                <div id="profile-content"></div>
+
+                <button id="back-btn">
+
+                    ← Zurück zum Ergebnis
+
+                </button>
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+    <script src="questions.js"></script>
+    <script src="fraktionen.js"></script>
+    <script src="script.js"></script>
 
 </body>
+
 </html>
