@@ -5,71 +5,111 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>FraktionsFinder 1848</title>
 <link rel="stylesheet" href="style.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
-<div id="app">
-<section id="start-screen" class="screen active">
-<h1>FraktionsFinder 1848</h1>
-<p>Finde heraus, welchem politischen Flügel und welcher Fraktion der Frankfurter Nationalversammlung deine Positionen am nächsten kommen.</p>
-<img src="assets/logo.png" class="logo" alt="Logo">
+
+<main class="container">
+
+<section id="start-screen" class="screen">
+<div class="hero">
+<h1>🏛️ FraktionsFinder 1848</h1>
+<p class="subtitle">
+Welche politische Strömung der Frankfurter Nationalversammlung
+entspricht deinen Ansichten?
+</p>
 <button id="start-btn">Quiz starten</button>
+</div>
+
+<div class="info-box">
+<h3>So funktioniert's</h3>
+<p>
+Beantworte die Aussagen. Anschließend erhältst du zuerst deinen
+politischen Flügel und danach die Fraktion, die am besten zu deinen
+Antworten passt.
+</p>
+</div>
+
+<footer class="footer">
+<p>FraktionsFinder 1848 · Geschichtsunterricht</p>
+<div class="qr-placeholder">
+<img src="assets/qr-code.png" id="qr-code" alt="QR-Code">
+</div>
+</footer>
 </section>
 
-<section id="quiz-screen" class="screen">
-<div class="progress-container"><div id="progress"></div></div>
-<div id="question-counter"></div>
-<div class="question-card"><h2 id="question-text"></h2></div>
-<div class="answer-buttons">
-<button id="btn-yes">👍 Stimme zu</button>
-<button id="btn-neutral">➖ Neutral</button>
-<button id="btn-no">👎 Stimme nicht zu</button>
+<section id="quiz-screen" class="screen hidden">
+<div class="progress-wrapper">
+<div class="progress-bar">
+<div id="progress"></div>
+</div>
+<p id="question-counter"></p>
+</div>
+
+<div class="card">
+<h2 id="question-text"></h2>
+
+<div class="button-group">
+<button id="btn-yes" class="yes">👍 Stimme zu</button>
+<button id="btn-neutral" class="neutral">🤔 Neutral</button>
+<button id="btn-no" class="no">👎 Stimme nicht zu</button>
+</div>
 </div>
 </section>
 
-<section id="result-screen" class="screen">
-<h1>Dein politisches Profil</h1>
+<section id="result-screen" class="screen hidden">
 
-<div id="wing-card" class="result-card">
-<h2 id="wing-title"></h2>
+<div class="result-card" id="wing-card">
+<h2>Dein politischer Flügel</h2>
+<h1 id="wing-name"></h1>
 <p id="wing-description"></p>
 </div>
 
-<div id="axis-card" class="result-card">
-<h2>Politisches Spektrum der Paulskirchenversammlung</h2>
+<div class="result-card" id="axis-card">
+<h2>Politisches Spektrum</h2>
 <div id="political-axis"></div>
 </div>
 
-<div id="winner-card" class="result-card">
+<div class="result-card">
 <h2>Passendste Fraktion</h2>
-<h3 id="winner-name"></h3>
+<div id="winner-card">
+<h1 id="winner-name"></h1>
 <div id="winner-percent"></div>
 <p id="winner-description"></p>
 </div>
+</div>
 
-<div id="history-card" class="result-card">
+<div class="result-card" id="history-card">
 <h2>Historische Einordnung</h2>
 <p id="history-text"></p>
 </div>
 
 <div class="result-card">
-<h2>Übereinstimmung mit allen Fraktionen</h2>
+<h2>Übereinstimmung aller Fraktionen</h2>
 <div id="ranking-list"></div>
 </div>
 
-<button id="restart-btn">Quiz erneut starten</button>
-</section>
-
-<section id="profile-screen" class="screen">
-<button id="back-btn">← Zurück</button>
-<h1 id="profile-title"></h1>
-<div id="profile-content"></div>
-</section>
+<div class="result-buttons">
+<button id="restart-btn">Quiz neu starten</button>
 </div>
 
-<footer>FraktionsFinder 1848 · Version 2.0</footer>
+</section>
+
+<section id="profile-screen" class="screen hidden">
+<div class="profile-card">
+<h1 id="profile-title"></h1>
+<div id="profile-content"></div>
+<button id="back-btn">← Zurück zum Ergebnis</button>
+</div>
+</section>
+
+</main>
 
 <script src="questions.js"></script>
 <script src="fraktionen.js"></script>
 <script src="script.js"></script>
+
 </body>
 </html>
