@@ -1,709 +1,145 @@
-/* ======================================================
-   FraktionsFinder 1848
-   style.css
-   Teil 1
-====================================================== */
 
 :root{
-
-    --bg:#f4f1ea;
-    --card:#ffffff;
-
-    --primary:#1f4e79;
-    --primary-dark:#163a5c;
-
-    --yes:#2e7d32;
-    --neutral:#f9a825;
-    --no:#c62828;
-
-    --text:#2b2b2b;
-    --text-light:#666;
-
-    --shadow:0 10px 30px rgba(0,0,0,.12);
-
-    --radius:18px;
-
-    --transition:.25s ease;
-
+  --bg:#f4f1ea;
+  --card:#ffffff;
+  --primary:#8b1e1e;
+  --gold:#d4af37;
+  --text:#2d2d2d;
+  --shadow:0 8px 20px rgba(0,0,0,.12);
+  --radius:18px;
 }
-
-
-*{
-
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
-
-}
-
-
+*{box-sizing:border-box}
 body{
-
-    font-family:"Poppins",sans-serif;
-
-    background:var(--bg);
-
-    color:var(--text);
-
-    min-height:100vh;
-
+ margin:0;
+ font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+ background:var(--bg);
+ color:var(--text);
 }
-
-
-.container{
-
-    width:min(1100px,92%);
-    margin:auto;
-
-    padding:40px 0;
-
+#app{
+ max-width:950px;
+ margin:auto;
+ padding:30px 20px 60px;
 }
+.screen{display:none}
+.screen.active{display:block;animation:fade .4s ease}
+@keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
 
-
-.hidden{
-
-    display:none !important;
-
+h1,h2,h3{text-align:center}
+.logo{
+ display:block;
+ margin:25px auto;
+ max-width:220px;
 }
-
-
-/* ======================================================
-   Karten
-====================================================== */
-
-.card,
-.result-card,
-.profile-card,
-.info-box{
-
-    background:var(--card);
-
-    border-radius:var(--radius);
-
-    box-shadow:var(--shadow);
-
-    padding:32px;
-
-    margin:25px 0;
-
-}
-
-
-/* ======================================================
-   Startseite
-====================================================== */
-
-.hero{
-
-    text-align:center;
-
-    margin-bottom:40px;
-
-}
-
-.hero h1{
-
-    font-size:3rem;
-
-    color:var(--primary);
-
-    margin-bottom:20px;
-
-}
-
-.subtitle{
-
-    max-width:700px;
-
-    margin:auto;
-
-    font-size:1.15rem;
-
-    line-height:1.7;
-
-    color:var(--text-light);
-
-}
-
-
-.info-box{
-
-    max-width:760px;
-
-    margin:40px auto;
-
-    text-align:center;
-
-}
-
-.info-box h3{
-
-    margin-bottom:15px;
-
-    color:var(--primary);
-
-}
-
-
-/* ======================================================
-   Buttons
-====================================================== */
-
 button{
-
-    font-family:inherit;
-
-    border:none;
-
-    cursor:pointer;
-
-    border-radius:14px;
-
-    transition:all .25s ease;
-
+ background:var(--primary);
+ color:#fff;
+ border:none;
+ border-radius:12px;
+ padding:14px 22px;
+ cursor:pointer;
+ font-size:1rem;
+ transition:.2s;
 }
-
-
-#start-btn{
-
-    margin-top:35px;
-
-    background:var(--primary);
-
-    color:white;
-
-    font-size:1.15rem;
-
-    padding:16px 42px;
-
+button:hover{transform:translateY(-2px)}
+#start-btn,#restart-btn{
+ display:block;
+ margin:30px auto;
 }
-
-#start-btn:hover{
-
-    background:var(--primary-dark);
-
-    transform:translateY(-2px);
-
+.progress-container{
+ width:100%;
+ background:#ddd;
+ border-radius:999px;
+ overflow:hidden;
+ margin-bottom:18px;
 }
-
-
-.button-group{
-
-    display:grid;
-
-    gap:16px;
-
-    margin-top:35px;
-
-}
-
-
-.button-group button{
-
-    color:white;
-
-    font-size:1.05rem;
-
-    padding:18px;
-
-}
-
-.yes{
-
-    background:var(--yes);
-
-}
-
-.neutral{
-
-    background:var(--neutral);
-
-}
-
-.no{
-
-    background:var(--no);
-
-}
-
-.button-group button:hover{
-
-    transform:translateY(-3px);
-
-    box-shadow:0 8px 18px rgba(0,0,0,.18);
-
-}
-
-
-/* ======================================================
-   Quiz
-====================================================== */
-
-.progress-wrapper{
-
-    margin-bottom:30px;
-
-}
-
-.progress-bar{
-
-    height:18px;
-
-    border-radius:999px;
-
-    background:#d9d9d9;
-
-    overflow:hidden;
-
-}
-
 #progress{
-
-    width:0;
-
-    height:100%;
-
-    background:linear-gradient(90deg,#4caf50,#81c784);
-
-    transition:width .4s ease;
-
+ width:0%;
+ height:14px;
+ background:linear-gradient(90deg,var(--primary),var(--gold));
+ transition:.3s;
 }
-
-#question-counter{
-
-    margin-top:10px;
-
-    color:var(--text-light);
-
-    text-align:right;
-
+.question-card,.result-card{
+ background:var(--card);
+ border-radius:var(--radius);
+ padding:24px;
+ margin:20px 0;
+ box-shadow:var(--shadow);
 }
-
-
-#question-text{
-
-    text-align:center;
-
-    line-height:1.6;
-
-    font-size:1.6rem;
-
-    transition:opacity .2s ease;
-
+.answer-buttons{
+ display:grid;
+ gap:12px;
 }
-
-
-/* ======================================================
-   Animationen
-====================================================== */
-
-.screen{
-
-    animation:fade .4s ease;
-
+.answer-buttons button{
+ width:100%;
 }
-
-@keyframes fade{
-
-    from{
-
-        opacity:0;
-
-        transform:translateY(12px);
-
-    }
-
-    to{
-
-        opacity:1;
-
-        transform:translateY(0);
-
-    }
-
-}/* ======================================================
-   Ergebnisseite
-====================================================== */
-
+#wing-card{
+ border-left:8px solid #2f7d32;
+}
+#axis-card{
+ border-left:8px solid var(--gold);
+}
 #winner-card{
-
-    color:white;
-
-    text-align:center;
-
-    padding:35px;
-
-    border-radius:var(--radius);
-
-    transition:all .3s ease;
-
+ border-left:8px solid var(--primary);
 }
-
-#winner-name{
-
-    font-size:2.3rem;
-
-    margin-bottom:15px;
-
+#history-card{
+ border-left:8px solid #1e5aa8;
 }
-
+#political-axis{
+ margin-top:20px;
+ display:flex;
+ flex-direction:column;
+ gap:10px;
+ position:relative;
+}
+.axis-row{
+ display:flex;
+ align-items:center;
+ gap:12px;
+}
+.axis-dot{
+ width:18px;
+ height:18px;
+ border-radius:50%;
+ background:#bbb;
+ flex-shrink:0;
+}
+.axis-label{
+ flex:1;
+}
+.axis-active .axis-dot{
+ background:var(--primary);
+ transform:scale(1.25);
+}
+.axis-active .axis-label{
+ font-weight:700;
+ color:var(--primary);
+}
 #winner-percent{
-
-    font-size:1.6rem;
-
-    font-weight:700;
-
-    margin:18px 0;
-
+ font-size:2rem;
+ text-align:center;
+ color:var(--primary);
+ font-weight:bold;
+ margin:10px 0;
 }
-
-#winner-description{
-
-    font-size:1.05rem;
-
-    line-height:1.7;
-
-    max-width:700px;
-
-    margin:auto;
-
-}
-
-
-.result-buttons{
-
-    display:flex;
-
-    justify-content:center;
-
-    margin-top:30px;
-
-}
-
-.result-buttons button{
-
-    background:var(--primary);
-
-    color:white;
-
-    padding:15px 35px;
-
-    font-size:1rem;
-
-}
-
-.result-buttons button:hover{
-
-    background:var(--primary-dark);
-
-}
-
-
-/* ======================================================
-   Ranking
-====================================================== */
-
-#ranking-list{
-
-    margin-top:25px;
-
-}
-
 .ranking-item{
-
-    margin-bottom:24px;
-
-    cursor:pointer;
-
-    transition:transform .2s ease;
-
+ margin:14px 0;
 }
-
-.ranking-item:hover{
-
-    transform:translateX(6px);
-
+.ranking-bar{
+ height:12px;
+ background:#ddd;
+ border-radius:999px;
+ overflow:hidden;
 }
-
-.ranking-label{
-
-    display:flex;
-
-    justify-content:space-between;
-
-    align-items:center;
-
-    margin-bottom:8px;
-
+.ranking-fill{
+ height:100%;
+ background:linear-gradient(90deg,var(--primary),var(--gold));
 }
-
-.ranking-label strong{
-
-    font-size:1.05rem;
-
+footer{
+ text-align:center;
+ padding:20px;
+ color:#666;
 }
-
-.ranking-label span{
-
-    font-weight:600;
-
-    color:var(--text-light);
-
-}
-
-.bar{
-
-    width:100%;
-
-    height:18px;
-
-    background:#d9d9d9;
-
-    border-radius:999px;
-
-    overflow:hidden;
-
-}
-
-.bar-fill{
-
-    height:100%;
-
-    width:0;
-
-    border-radius:999px;
-
-    transition:width .8s ease;
-
-}
-
-
-/* ======================================================
-   Profilseite
-====================================================== */
-
-.profile-card{
-
-    max-width:900px;
-
-    margin:auto;
-
-}
-
-#profile-title{
-
-    color:var(--primary);
-
-    text-align:center;
-
-    margin-bottom:30px;
-
-}
-
-#profile-content{
-
-    line-height:1.8;
-
-}
-
-#profile-content h3{
-
-    margin-top:30px;
-
-    margin-bottom:10px;
-
-    color:var(--primary);
-
-}
-
-#profile-content ul{
-
-    padding-left:22px;
-
-}
-
-#profile-content li{
-
-    margin:8px 0;
-
-}
-
-#back-btn{
-
-    display:block;
-
-    margin:40px auto 0;
-
-    background:var(--primary);
-
-    color:white;
-
-    padding:14px 34px;
-
-}
-
-#back-btn:hover{
-
-    background:var(--primary-dark);
-
-}
-
-
-/* ======================================================
-   Footer
-====================================================== */
-
-.footer{
-
-    margin-top:60px;
-
-    text-align:center;
-
-    color:var(--text-light);
-
-}
-
-.footer p{
-
-    margin-bottom:15px;
-
-}
-
-.qr-placeholder{
-
-    display:flex;
-
-    flex-direction:column;
-
-    align-items:center;
-
-    gap:12px;
-
-}
-
-#qr-code{
-
-    width:160px;
-
-    max-width:100%;
-
-    border-radius:12px;
-
-    background:white;
-
-    padding:8px;
-
-    box-shadow:var(--shadow);
-
-}
-
-
-/* ======================================================
-   Responsive Design
-====================================================== */
-
-@media (max-width:900px){
-
-    .hero h1{
-
-        font-size:2.3rem;
-
-    }
-
-    #question-text{
-
-        font-size:1.35rem;
-
-    }
-
-    #winner-name{
-
-        font-size:1.8rem;
-
-    }
-
-}
-
-@media (max-width:650px){
-
-    body{
-
-        font-size:.95rem;
-
-    }
-
-    .container{
-
-        width:95%;
-
-        padding:20px 0;
-
-    }
-
-    .card,
-    .result-card,
-    .profile-card,
-    .info-box{
-
-        padding:22px;
-
-    }
-
-    .button-group{
-
-        gap:12px;
-
-    }
-
-    .button-group button{
-
-        padding:16px;
-
-        font-size:1rem;
-
-    }
-
-    #question-text{
-
-        font-size:1.2rem;
-
-    }
-
-    #winner-name{
-
-        font-size:1.5rem;
-
-    }
-
-    #winner-percent{
-
-        font-size:1.3rem;
-
-    }
-
-    #qr-code{
-
-        width:130px;
-
-    }
-
-}
-
-
-/* ======================================================
-   Kleine Details
-====================================================== */
-
-::selection{
-
-    background:var(--primary);
-
-    color:white;
-
-}
-
-html{
-
-    scroll-behavior:smooth;
-
+@media(max-width:700px){
+ #app{padding:18px}
+ .question-card,.result-card{padding:18px}
 }
