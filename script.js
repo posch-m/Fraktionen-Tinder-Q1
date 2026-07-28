@@ -35,7 +35,10 @@ const winnerCard = document.getElementById("winner-card");
 const winnerName = document.getElementById("winner-name");
 const winnerPercent = document.getElementById("winner-percent");
 const winnerDescription = document.getElementById("winner-description");
-
+const wingName = document.getElementById("wing-name");
+const wingDescription = document.getElementById("wing-description");
+const historyText = document.getElementById("history-text");
+const politicalAxis = document.getElementById("political-axis");
 const rankingList = document.getElementById("ranking-list");
 
 const profileTitle = document.getElementById("profile-title");
@@ -464,9 +467,15 @@ function showResult(){
 
     showScreen(resultScreen);
 
-    const winner=ranking[0];
+    const winner = ranking[0];
+
+    renderWing(winner);
+
+    renderAxis(winner);
 
     renderWinner(winner);
+
+    renderHistory(winner);
 
     renderRanking();
 
@@ -478,7 +487,85 @@ function showResult(){
 ======================================================= */
 
 function renderWinner(result){
+function renderWing(result){
 
+    wingName.textContent = result.faction.wing;
+
+    switch(result.faction.wing){
+
+        case "Radikaldemokratischer Flügel":
+
+            wingDescription.textContent =
+            "Du vertrittst überwiegend radikaldemokratische Positionen und befürwortest weitreichende politische Reformen.";
+
+            break;
+
+        case "Demokratischer Flügel":
+
+            wingDescription.textContent =
+            "Du vertrittst demokratische Positionen und setzt auf eine stärkere Beteiligung des Volkes.";
+
+            break;
+
+        case "Liberales Zentrum":
+
+            wingDescription.textContent =
+            "Du stehst den liberalen Kräften der Nationalversammlung am nächsten.";
+
+            break;
+
+        default:
+
+            wingDescription.textContent =
+            "Du bevorzugst gemäßigte Reformen und eine konstitutionelle Monarchie.";
+
+    }
+
+}function renderAxis(result){
+
+    const map = {
+
+        "Donnersberg":12,
+        "Deutscher Hof":25,
+        "Westendhall":38,
+        "Augsburger Hof":50,
+        "Café Milani":63,
+        "Landsberg":75,
+        "Württemberger Hof":88,
+        "Casino":96
+
+    };
+
+    politicalAxis.innerHTML = `
+
+        <div class="axis">
+
+            <div class="axis-radikal">Radikaldemokraten</div>
+
+            <div class="axis-demokratisch">Demokraten</div>
+
+            <div class="axis-liberal">Liberale</div>
+
+            <div class="axis-konservativ">Konservativ-Liberale</div>
+
+        </div>
+
+        <div class="axis-marker" style="left:${map[result.faction.name]}%">
+
+            ▲
+
+            <span>Deine Position</span>
+
+        </div>
+
+    `;
+
+}function renderHistory(result){
+
+    historyText.textContent =
+        "Die Mehrheit der Abgeordneten der Frankfurter Nationalversammlung gehörte dem liberalen Zentrum oder den konservativ-liberalen Fraktionen an. Demokratische und radikaldemokratische Positionen waren deutlich in der Minderheit. Dadurch wird deutlich, dass viele heutige politische Vorstellungen stärker demokratisch geprägt sind als die Mehrheitspositionen von 1848.";
+
+}
     const faction=result.faction;
 
     winnerCard.style.background=faction.color;
