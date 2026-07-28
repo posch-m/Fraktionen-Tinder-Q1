@@ -8,243 +8,286 @@ Teil 1 von 2
 
 const factions = {
 
-casino:{
+    casino: {
 
-    name:"Casino",
+        name: "Casino",
 
-    color:"#1f4e79",
+        wing: "Konservativ-liberaler Flügel",
 
-    ideology:"Nationalliberal",
+        color: "#1f4e79",
 
-    shortDescription:
-        "Du vertrittst gemäßigt liberale Positionen. Du befürwortest einen deutschen Nationalstaat mit einer konstitutionellen Monarchie.",
+        ideology: "Konstitutionell-liberal",
 
-    description:
-        "Das Casino war die größte und einflussreichste Fraktion der Frankfurter Nationalversammlung. Ihre Mitglieder wollten Deutschland unter einem erblichen Kaiser einigen, gleichzeitig aber eine moderne Verfassung, einen Rechtsstaat und garantierte Grundrechte schaffen. Revolutionäre Veränderungen lehnten sie überwiegend ab und setzten stattdessen auf Reformen.",
+        shortDescription:
+            "Du bevorzugst Reformen auf gesetzlichem Weg, eine konstitutionelle Monarchie und einen starken Nationalstaat.",
 
-    representatives:[
-        "Heinrich von Gagern",
-        "Eduard Simson",
-        "Georg Beseler"
-    ],
+        description:
+            "Die Casino-Fraktion bildete die stärkste Gruppierung der Frankfurter Nationalversammlung. Sie setzte sich für einen deutschen Nationalstaat mit konstitutioneller Monarchie, Gewaltenteilung und bürgerlichen Freiheitsrechten ein. Revolutionäre Umbrüche lehnte sie jedoch ab und bevorzugte einen schrittweisen Wandel.",
 
-    positions:[
-        "Konstitutionelle Monarchie",
-        "Erblicher Kaiser",
-        "Kleindeutsche Lösung",
-        "Rechtsstaat",
-        "Grundrechte",
-        "Nationalstaat",
-        "Schrittweise Reformen"
-    ]
+        representatives: [
 
-},
+            "Heinrich von Gagern",
+            "Eduard Simson",
+            "Georg Beseler"
 
-wuerttembergerhof:{
+        ],
 
-    name:"Württemberger Hof",
+        positions: [
 
-    color:"#4f81bd",
+            "Konstitutionelle Monarchie",
+            "Grundrechte",
+            "Nationalstaat",
+            "Gewaltenteilung",
+            "Parlament",
+            "Starker Rechtsstaat"
 
-    ideology:"Liberalkonservativ",
+        ]
 
-    shortDescription:
-        "Du vertrittst liberale Reformen, möchtest aber den deutschen Einzelstaaten viele Rechte erhalten.",
+    },
 
-    description:
-        "Der Württemberger Hof stand dem Casino nahe, legte jedoch größeren Wert auf den Föderalismus. Die Fraktion unterstützte eine konstitutionelle Monarchie und eine Verfassung, wollte aber die Selbstständigkeit der deutschen Einzelstaaten stärker bewahren.",
+    wuerttembergerhof: {
 
-    representatives:[
-        "Karl Mathy",
-        "Johann Gustav Heckscher"
-    ],
+        name: "Württemberger Hof",
 
-    positions:[
-        "Konstitutionelle Monarchie",
-        "Föderalismus",
-        "Grundrechte",
-        "Verfassung",
-        "Zusammenarbeit mit den Fürsten",
-        "Parlamentarische Mitwirkung"
-    ]
+        wing: "Konservativ-liberaler Flügel",
 
-},
+        color: "#3d6da8",
 
-landsberg:{
+        ideology: "Gemäßigt liberal",
 
-    name:"Landsberg",
+        shortDescription:
+            "Du befürwortest Reformen, möchtest aber bestehende staatliche Strukturen weitgehend erhalten.",
 
-    color:"#5b9bd5",
+        description:
+            "Der Württemberger Hof stand politisch zwischen konservativen Kräften und dem liberalen Zentrum. Die Mitglieder unterstützten Freiheitsrechte und einen deutschen Nationalstaat, wollten Veränderungen jedoch möglichst ohne revolutionäre Zuspitzung erreichen.",
 
-    ideology:"Linksliberal",
+        representatives: [
 
-    shortDescription:
-        "Du bevorzugst einen liberalen Verfassungsstaat mit einem starken Parlament und einer verantwortlichen Regierung.",
+            "Karl Mathy",
+            "Friedrich Römer"
 
-    description:
-        "Die Fraktion Landsberg bildete den Übergang zwischen den gemäßigten Liberalen und den Demokraten. Sie wollte den Einfluss des Parlaments deutlich stärken, hielt aber grundsätzlich an einer konstitutionellen Monarchie fest.",
+        ],
 
-    representatives:[
-        "Friedrich Daniel Bassermann",
-        "Carl Theodor Welcker"
-    ],
+        positions: [
 
-    positions:[
-        "Starkes Parlament",
-        "Verantwortliche Regierung",
-        "Grundrechte",
-        "Konstitutionelle Monarchie",
-        "Liberale Reformpolitik",
-        "Nationale Einheit"
-    ]
+            "Konstitutionelle Monarchie",
+            "Bürgerliche Freiheitsrechte",
+            "Schrittweise Reformen",
+            "Nationalstaat",
+            "Rechtsstaat"
 
-},
+        ]
 
-cafemilani:{
+    },
 
-    name:"Café Milani",
+    landsberg: {
 
-    color:"#8064a2",
+        name: "Landsberg",
 
-    ideology:"Liberales Zentrum",
+        wing: "Liberales Zentrum",
 
-    shortDescription:
-        "Du suchst den Ausgleich zwischen gemäßigten Liberalen und Demokraten und bevorzugst politische Kompromisse.",
+        color: "#6aa84f",
 
-    description:
-        "Das Café Milani war eine kleinere Gruppierung im liberalen Zentrum. Die Abgeordneten unterstützten eine freiheitliche Verfassung, parlamentarische Reformen und eine stärkere politische Beteiligung der Bevölkerung, versuchten aber häufig zwischen den politischen Lagern zu vermitteln.",
+        ideology: "Liberales Zentrum",
 
-    representatives:[
-        "Johannes von Miquel"
-    ],
+        shortDescription:
+            "Du vertrittst liberale Positionen und setzt auf einen Ausgleich zwischen Reform und Stabilität.",
 
-    positions:[
-        "Kompromisspolitik",
-        "Grundrechte",
-        "Parlamentarismus",
-        "Liberale Reformen",
-        "Mehr Bürgerbeteiligung",
-        "Nationalstaat"
-    ]
+        description:
+            "Die Fraktion Landsberg gehörte zum liberalen Zentrum der Nationalversammlung. Sie strebte einen deutschen Nationalstaat mit Verfassung und Grundrechten an und suchte häufig den Kompromiss zwischen den politischen Lagern.",
 
-},augsburgerhof:{
+        representatives: [
 
-    name:"Augsburger Hof",
+            "Johann Gustav Heckscher",
+            "Friedrich Daniel Bassermann"
 
-    color:"#70ad47",
+        ],
 
-    ideology:"Demokratisch-liberal",
+        positions: [
 
-    shortDescription:
-        "Du setzt dich für einen demokratischen Verfassungsstaat mit einem starken Parlament und einer breiten politischen Beteiligung ein.",
+            "Verfassung",
+            "Grundrechte",
+            "Parlament",
+            "Kompromisse",
+            "Nationalstaat"
 
-    description:
-        "Der Augsburger Hof gehörte zum linken Zentrum der Frankfurter Nationalversammlung. Die Fraktion unterstützte demokratische Reformen, ein erweitertes Wahlrecht und eine stärkere parlamentarische Kontrolle der Regierung. Sie strebte Veränderungen auf gesetzlichem Weg an und grenzte sich von radikalen Revolutionären ab.",
+        ]
 
-    representatives:[
-        "Robert Blum",
-        "Franz Jacob Wigard"
-    ],
+    },
 
-    positions:[
-        "Demokratischer Verfassungsstaat",
-        "Erweitertes Wahlrecht",
-        "Parlamentarische Regierung",
-        "Grundrechte",
-        "Nationale Einheit",
-        "Friedliche Reformen"
-    ]
+    cafemilani: {
 
-},
+        name: "Café Milani",
 
-westendhall:{
+        wing: "Liberales Zentrum",
 
-    name:"Westendhall",
+        color: "#8bc34a",
 
-    color:"#ffc000",
+        ideology: "Linksliberal",
 
-    ideology:"Linke Demokraten",
+        shortDescription:
+            "Du befürwortest umfangreiche Freiheitsrechte und weitreichende parlamentarische Mitbestimmung.",
 
-    shortDescription:
-        "Du vertrittst demokratische Positionen und möchtest die Macht von Monarchen deutlich begrenzen.",
+        description:
+            "Das Café Milani stand innerhalb des liberalen Spektrums weiter links. Die Abgeordneten unterstützten demokratische Reformen, wollten diese jedoch überwiegend auf parlamentarischem Weg durchsetzen.",
 
-    description:
-        "Die Fraktion Westendhall gehörte zum linken Flügel der Nationalversammlung. Sie forderte eine weitgehende Demokratisierung des politischen Systems, ein allgemeines Wahlrecht und eine Regierung, die dem Parlament verantwortlich ist. Im Gegensatz zum Donnersberg setzte sie jedoch stärker auf parlamentarische Mehrheiten als auf revolutionäre Mittel.",
+        representatives: [
 
-    representatives:[
-        "Johann Jacoby"
-    ],
+            "Carl Theodor Welcker",
+            "Karl Theodor Welcker"
 
-    positions:[
-        "Demokratie",
-        "Allgemeines Wahlrecht",
-        "Starkes Parlament",
-        "Bürgerrechte",
-        "Begrenzung der Monarchie",
-        "Politische Reformen"
-    ]
+        ],
 
-},
+        positions: [
 
-deutscherhof:{
+            "Parlamentarische Regierung",
+            "Grundrechte",
+            "Freiheitsrechte",
+            "Demokratische Reformen",
+            "Nationalstaat"
 
-    name:"Deutscher Hof",
+        ]
 
-    color:"#ed7d31",
+    },    augsburgerhof: {
 
-    ideology:"Radikaldemokratisch",
+        name: "Augsburger Hof",
 
-    shortDescription:
-        "Du befürwortest weitreichende demokratische Reformen und eine umfassende politische Mitbestimmung der Bevölkerung.",
+        wing: "Demokratischer Flügel",
 
-    description:
-        "Der Deutsche Hof gehörte zum linken Lager der Paulskirche. Seine Mitglieder verlangten ein allgemeines Wahlrecht, eine parlamentarisch verantwortliche Regierung und umfangreiche politische Freiheitsrechte. Auch soziale Reformen spielten eine größere Rolle als bei den liberalen Fraktionen.",
+        color: "#f39c12",
 
-    representatives:[
-        "Ludwig Simon",
-        "Moritz Hartmann"
-    ],
+        ideology: "Gemäßigt demokratisch",
 
-    positions:[
-        "Volkssouveränität",
-        "Allgemeines Wahlrecht",
-        "Parlamentarische Demokratie",
-        "Soziale Reformen",
-        "Bürgerrechte",
-        "Nationale Einheit"
-    ]
+        shortDescription:
+            "Du setzt dich für eine stärkere Parlamentarisierung und eine Ausweitung demokratischer Mitbestimmung ein.",
 
-},
+        description:
+            "Der Augsburger Hof gehörte zum demokratischen Flügel der Frankfurter Nationalversammlung. Seine Mitglieder befürworteten eine stärkere Kontrolle der Regierung durch das Parlament, eine Ausweitung politischer Mitbestimmung und einen deutschen Nationalstaat auf demokratischer Grundlage.",
 
-donnersberg:{
+        representatives: [
 
-    name:"Donnersberg",
+            "Franz Raveaux",
+            "Christian Kapp"
 
-    color:"#c00000",
+        ],
 
-    ideology:"Republikanisch-radikaldemokratisch",
+        positions: [
 
-    shortDescription:
-        "Du stehst für eine Republik, umfassende Demokratie und tiefgreifende politische sowie soziale Veränderungen.",
+            "Parlamentarische Regierung",
+            "Demokratische Mitbestimmung",
+            "Grundrechte",
+            "Nationalstaat",
+            "Stärkung des Parlaments"
 
-    description:
-        "Der Donnersberg war die linksradikalste Fraktion der Frankfurter Nationalversammlung. Ihre Mitglieder lehnten die Monarchie grundsätzlich ab und forderten eine demokratische Republik, allgemeines Wahlrecht sowie weitreichende Freiheits- und Mitbestimmungsrechte. Viele Abgeordnete hielten revolutionären Widerstand für legitim, wenn die Ziele der Revolution von 1848 nicht auf parlamentarischem Weg erreicht werden konnten.",
+        ]
 
-    representatives:[
-        "Arnold Ruge",
-        "Friedrich Hecker",
-        "Gustav Struve"
-    ],
+    },
 
-    positions:[
-        "Republik",
-        "Volkssouveränität",
-        "Allgemeines Wahlrecht",
-        "Soziale Gerechtigkeit",
-        "Umfassende Grundrechte",
-        "Revolution als letztes Mittel"
-    ]
+    westendhall: {
 
-}
+        name: "Westendhall",
+
+        wing: "Demokratischer Flügel",
+
+        color: "#e67e22",
+
+        ideology: "Demokratisch",
+
+        shortDescription:
+            "Du befürwortest eine weitgehende Demokratisierung Deutschlands und eine starke Rolle des Volkes.",
+
+        description:
+            "Die Westendhall-Fraktion vertrat konsequent demokratische Positionen. Sie setzte sich für Volkssouveränität, eine parlamentarisch verantwortliche Regierung und umfangreiche politische Freiheitsrechte ein.",
+
+        representatives: [
+
+            "Robert Blum",
+            "Franz Jacob Wigard"
+
+        ],
+
+        positions: [
+
+            "Volkssouveränität",
+            "Parlamentarische Demokratie",
+            "Umfassende Grundrechte",
+            "Pressefreiheit",
+            "Verantwortliche Regierung"
+
+        ]
+
+    },
+
+    deutscherhof: {
+
+        name: "Deutscher Hof",
+
+        wing: "Radikaldemokratischer Flügel",
+
+        color: "#c0392b",
+
+        ideology: "Radikaldemokratisch",
+
+        shortDescription:
+            "Du vertrittst deutlich demokratische Positionen und bist bereit, tiefgreifende Veränderungen des politischen Systems vorzunehmen.",
+
+        description:
+            "Der Deutsche Hof gehörte zum linken Flügel der Nationalversammlung. Die Abgeordneten forderten eine demokratische Republik, umfassende Bürgerrechte und weitreichende politische Reformen.",
+
+        representatives: [
+
+            "Ludwig Simon",
+            "Julius Fröbel"
+
+        ],
+
+        positions: [
+
+            "Republik",
+            "Volkssouveränität",
+            "Allgemeines Wahlrecht",
+            "Umfassende Grundrechte",
+            "Demokratische Reformen"
+
+        ]
+
+    },
+
+    donnersberg: {
+
+        name: "Donnersberg",
+
+        wing: "Radikaldemokratischer Flügel",
+
+        color: "#a93226",
+
+        ideology: "Radikaldemokratisch",
+
+        shortDescription:
+            "Du forderst einen grundlegenden politischen Neuanfang mit einer demokratischen Republik und umfassender Volkssouveränität.",
+
+        description:
+            "Der Donnersberg war die linkeste Fraktion der Frankfurter Nationalversammlung. Ihre Mitglieder traten für eine demokratische Republik, allgemeines Wahlrecht, soziale Reformen und eine konsequente Umsetzung der Volkssouveränität ein. Viele ihrer Forderungen gingen den liberalen Mehrheiten deutlich zu weit.",
+
+        representatives: [
+
+            "Arnold Ruge",
+            "Friedrich Hecker",
+            "Lorenz Brentano"
+
+        ],
+
+        positions: [
+
+            "Demokratische Republik",
+            "Volkssouveränität",
+            "Allgemeines Wahlrecht",
+            "Soziale Reformen",
+            "Pressefreiheit",
+            "Versammlungsfreiheit"
+
+        ]
+
+    }
 
 };
