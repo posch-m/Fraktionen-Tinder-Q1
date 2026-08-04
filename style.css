@@ -495,7 +495,7 @@ button:active{
 
     border-radius:16px;
 
-    background:white;
+    background:rgb(55, 11, 165);
 
 }
 
@@ -611,7 +611,7 @@ button:active{
 
     background:var(--primary);
 
-    color:white;
+    color:rgb(22, 27, 174);
 
     padding:6px 12px;
 
@@ -631,7 +631,7 @@ button:active{
 
 #winner-card{
 
-    color:white;
+    color:rgb(164, 161, 171);
 
     text-align:center;
 
