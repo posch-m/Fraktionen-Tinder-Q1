@@ -495,7 +495,9 @@ button:active{
 
     border-radius:16px;
 
-    background:rgb(55, 11, 165);
+    background:#f7f7f7;
+
+    color:var(--text);
 
 }
 
@@ -569,7 +571,7 @@ button:active{
 
     font-size:.9rem;
 
-    color:var(--text-light);
+    color:var(--text);
 
     font-weight:600;
 
@@ -611,7 +613,7 @@ button:active{
 
     background:var(--primary);
 
-    color:rgb(22, 27, 174);
+    color:#ffffff;
 
     padding:6px 12px;
 
