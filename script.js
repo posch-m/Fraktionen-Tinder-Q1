@@ -30,7 +30,7 @@ Antworten:
 ======================================================= */
 
 const APP_CONFIG = {
-    version: "2.0",
+    version: "4.0",
     animationDuration: 260,
     resultAnimationDuration: 900,
     storageKey: "fraktionsfinder1848-last-result",
@@ -70,8 +70,8 @@ const DOM = {
     wingName: document.getElementById("wing-name"),
     wingDescription: document.getElementById("wing-description"),
 
-    politicalAxis: document.getElementById("political-axis"),
     axisCard: document.getElementById("axis-card"),
+    politicalAxis: document.getElementById("political-axis"),
 
     historyCard: document.getElementById("history-card"),
     historyText: document.getElementById("history-text"),
@@ -563,72 +563,83 @@ function renderResults() {
         return;
     }
 
-    renderWing(state.winner);
-    renderPoliticalAxis(state.results);
+    renderWingSection(state.winner);
+    renderAxisSection(state.results);
     renderWinner(state.winner);
-    renderHistory(state.winner);
+    renderHistorySection(state.winner);
     renderRanking(state.results);
 }
 
 
+
 /* =======================================================
-   POLITISCHER FLÜGEL
+   ERGEBNIS: POLITISCHER FLÜGEL
 ======================================================= */
 
-function renderWing(result) {
-    if (!DOM.wingName || !DOM.wingDescription) {
+function renderWingSection(result) {
+    const nameElement = document.getElementById("wing-name");
+    const descriptionElement = document.getElementById("wing-description");
+    const cardElement = document.getElementById("wing-card");
+
+    if (!nameElement || !descriptionElement) {
+        console.warn("Flügel-Elemente fehlen in der index.html.");
         return;
     }
 
     const faction = result.faction;
 
-    DOM.wingName.textContent = faction.wing || faction.ideology || faction.name;
+    nameElement.textContent =
+        faction.wing || faction.ideology || faction.name;
 
-    DOM.wingDescription.textContent =
-        buildWingDescription(faction, result);
+    descriptionElement.textContent =
+        `${faction.name} gehört zum ${faction.wing || "politischen Spektrum"} und wird hier als ${faction.ideology || "politische Gruppierung"} eingeordnet. Deine Übereinstimmung mit dieser Fraktion beträgt ${result.percent} %.`;
 
-    if (DOM.wingCard) {
-        DOM.wingCard.style.borderTop =
-            `6px solid ${faction.color}`;
+    if (cardElement) {
+        cardElement.style.borderTop = `6px solid ${faction.color}`;
     }
 }
 
 
-function buildWingDescription(faction, result) {
-    const wing = faction.wing || "politische Gruppierung";
-    const ideology = faction.ideology || "ohne nähere ideologische Bezeichnung";
-
-    return `Dein Ergebnis ordnet dich dem ${wing} zu. Deine stärkste Übereinstimmung besteht mit ${faction.name} (${result.percent} %). Die Fraktion wird im FraktionsFinder als ${ideology} eingeordnet.`;
-}
-
-
 /* =======================================================
-   POLITISCHE ACHSE
+   ERGEBNIS: POLITISCHE EINORDNUNG
 ======================================================= */
 
-/*
- * Die Achse dient ausschließlich der visuellen Einordnung
- * innerhalb der acht im FraktionsFinder verwendeten
- * Fraktionen. Sie ist keine historische Messskala.
- */
-const AXIS_POSITIONS = {
-    donnersberg: 8,
-    deutscherhof: 22,
-    westendhall: 37,
-    augsburgerhof: 50,
-    cafemilani: 62,
-    landsberg: 72,
-    wuerttembergerhof: 84,
-    casino: 94
-};
+const AXIS_ORDER = [
+    "donnersberg",
+    "deutscherhof",
+    "westendhall",
+    "augsburgerhof",
+    "cafemilani",
+    "landsberg",
+    "wuerttembergerhof",
+    "casino"
+];
 
+function renderAxisSection(results) {
+    const axisElement = document.getElementById("political-axis");
+    const axisCardElement = document.getElementById("axis-card");
 
-function calculateAxisPosition(results) {
-    let numerator = 0;
-    let denominator = 0;
+    if (!axisElement) {
+        console.warn("Element #political-axis fehlt in der index.html.");
+        return;
+    }
+
+    const positions = {
+        donnersberg: 8,
+        deutscherhof: 21,
+        westendhall: 35,
+        augsburgerhof: 49,
+        cafemilani: 62,
+        landsberg: 74,
+        wuerttembergerhof: 87,
+        casino: 96
+    };
+
+    let weightedPosition = 0;
+    let totalWeight = 0;
 
     results.forEach(result => {
-        const position = AXIS_POSITIONS[result.key];
+        const position = positions[result.key];
 
         if (typeof position !== "number") {
             return;
@@ -636,53 +647,31 @@ function calculateAxisPosition(results) {
 
         const weight = Math.max(result.percent, 1);
 
-        numerator += position * weight;
-        denominator += weight;
+        weightedPosition += position * weight;
+        totalWeight += weight;
     });
 
-    if (denominator === 0) {
-        return 50;
+    const finalPosition =
+        totalWeight > 0
+            ? clamp(Math.round(weightedPosition / totalWeight), 5, 95)
+            : 50;
+
+    let label = "liberal";
+
+    if (finalPosition < 20) {
+        label = "radikaldemokratisch";
+    } else if (finalPosition < 42) {
+        label = "demokratisch";
+    } else if (finalPosition < 65) {
+        label = "liberal";
+    } else if (finalPosition < 82) {
+        label = "liberal-konservativ";
+    } else {
+        label = "konservativ";
     }
 
-    return clamp(
-        Math.round(numerator / denominator),
-        5,
-        95
-    );
-}
-
-
-function getAxisLabel(position) {
-    if (position < 20) {
-        return "radikaldemokratisch";
-    }
-
-    if (position < 42) {
-        return "demokratisch";
-    }
-
-    if (position < 65) {
-        return "liberal-demokratisch";
-    }
-
-    if (position < 82) {
-        return "liberal-konservativ";
-    }
-
-    return "konservativ-liberal";
-}
-
-
-function renderPoliticalAxis(results) {
-    if (!DOM.politicalAxis) {
-        return;
-    }
-
-    const position = calculateAxisPosition(results);
-    const label = getAxisLabel(position);
-
-    DOM.politicalAxis.innerHTML = `
-        <div class="axis">
+    axisElement.innerHTML = `
+        <div class="axis" aria-label="Politische Einordnung">
             <div class="axis-radikal"></div>
             <div class="axis-demokratisch"></div>
             <div class="axis-liberal"></div>
@@ -696,56 +685,50 @@ function renderPoliticalAxis(results) {
             <span>Konservativ</span>
         </div>
 
-        <div
-            class="axis-marker"
-            style="left:${position}%"
-            aria-label="Einordnung: ${escapeHTML(label)}"
-        >
+        <div class="axis-marker" style="left:${finalPosition}%">
             <span>${escapeHTML(label)}</span>
         </div>
     `;
 
-    if (DOM.axisCard) {
-        DOM.axisCard.dataset.axisPosition = String(position);
+    if (axisCardElement) {
+        axisCardElement.style.backgroundColor = "#f7f7f7";
+        axisCardElement.style.color = "#2b2b2b";
     }
 }
 
 
 /* =======================================================
-   HISTORISCHE EINORDNUNG
+   ERGEBNIS: HISTORISCHE EINORDNUNG
 ======================================================= */
 
-function renderHistory(result) {
-    if (!DOM.historyText) {
+function renderHistorySection(result) {
+    const historyElement = document.getElementById("history-text");
+    const historyCardElement = document.getElementById("history-card");
+
+    if (!historyElement) {
+        console.warn("Element #history-text fehlt in der index.html.");
         return;
     }
 
     const faction = result.faction;
 
-    DOM.historyText.textContent =
-        buildHistoryText(faction, result);
+    const positions = Array.isArray(faction.positions)
+        ? faction.positions.slice(0, 4).join(", ")
+        : "";
 
-    if (DOM.historyCard) {
-        DOM.historyCard.style.borderLeftColor =
-            faction.color;
+    const representatives = Array.isArray(faction.representatives)
+        ? faction.representatives.slice(0, 3).join(", ")
+        : "";
+
+    historyElement.textContent =
+        `Deine größte Übereinstimmung besteht mit der Fraktion ${faction.name} (${result.percent} %). ${faction.description} Zu ihren zentralen Positionen zählen ${positions}. Zu den genannten Vertretern gehören ${representatives}.`;
+
+    historyElement.style.color = "#2b2b2b";
+
+    if (historyCardElement) {
+        historyCardElement.style.color = "#2b2b2b";
+        historyCardElement.style.borderLeftColor = faction.color;
     }
-}
-
-
-function buildHistoryText(faction, result) {
-    const representatives =
-        Array.isArray(faction.representatives) &&
-        faction.representatives.length
-            ? faction.representatives.slice(0, 3).join(", ")
-            : "verschiedene Abgeordnete";
-
-    const positions =
-        Array.isArray(faction.positions) &&
-        faction.positions.length
-            ? faction.positions.slice(0, 3).join(", ")
-            : "ihre politischen Ziele";
-
-    return `Dein Ergebnis weist die größte Übereinstimmung mit der Fraktion ${faction.name} auf (${result.percent} %). ${faction.description} Zu den im FraktionsFinder hinterlegten zentralen Positionen gehören insbesondere ${positions}. Als Vertreter sind unter anderem ${representatives} angegeben.`;
 }
 
 
@@ -993,10 +976,15 @@ function clearResultScreen() {
     DOM.winnerPercent.textContent = "";
     DOM.winnerDescription.textContent = "";
 
-    if (DOM.wingName) DOM.wingName.textContent = "";
-    if (DOM.wingDescription) DOM.wingDescription.textContent = "";
-    if (DOM.politicalAxis) DOM.politicalAxis.innerHTML = "";
-    if (DOM.historyText) DOM.historyText.textContent = "";
+    const wingName = document.getElementById("wing-name");
+    const wingDescription = document.getElementById("wing-description");
+    const politicalAxis = document.getElementById("political-axis");
+    const historyText = document.getElementById("history-text");
+
+    if (wingName) wingName.textContent = "";
+    if (wingDescription) wingDescription.textContent = "";
+    if (politicalAxis) politicalAxis.innerHTML = "";
+    if (historyText) historyText.textContent = "";
 
     DOM.winnerCard.style.backgroundColor = "";
     DOM.winnerCard.style.color = "";
