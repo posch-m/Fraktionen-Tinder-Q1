@@ -630,20 +630,21 @@ button:active{
 ====================================================== */
 
 #winner-card{
-
-    color:rgb(164, 161, 171);
-
+    background:var(--primary);
+    color:#ffffff;
     text-align:center;
-
-    padding:38px;
-
-    border-radius:18px;
-
-    transition:all .35s ease;
-
-    box-shadow:0 10px 30px rgba(0,0,0,.18);
-
+    padding:35px;
+    border-radius:var(--radius);
+    transition:all .3s ease;
 }
+
+#winner-card h1,
+#winner-card p,
+#winner-card div{
+    color:inherit;
+}
+
+
 
 #winner-name{
 
@@ -740,17 +741,13 @@ button:active{
 }
 
 .ranking-label strong{
-
-    font-size:1.08rem;
-
+    font-size:1.05rem;
+    color:var(--text);
 }
 
 .ranking-label span{
-
-    font-weight:700;
-
+    font-weight:600;
     color:var(--text-light);
-
 }
 
 .bar{
@@ -895,7 +892,9 @@ button:active{
     color:var(--primary);
 
 }
-
+#profile-content{
+    line-height:1.8;
+}
 #profile-content table{
 
     width:100%;
