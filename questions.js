@@ -104,7 +104,7 @@ const questions = [
             casino: 2,
             wuerttembergerhof: 2,
             landsberg: 2,
-            cafemilani: 1,
+            cafemilani: 0,
             augsburgerhof: 3,
             westendhall: 3,
             deutscherhof: 3,
