@@ -1,306 +1,61 @@
-/*
-=========================================================
-FraktionsFinder 1848
-script.js – Version 5.0
-=========================================================
-
-Diese Version ist exakt auf die aktuelle index.html abgestimmt.
-
-Benötigt:
-- questions.js
-- fraktionen.js
-- style.css
-
-Ergebnisbereiche:
-- wing-name / wing-description
-- political-axis
-- winner-name / winner-percent / winner-description
-- history-text
-- ranking-list
-- profile-title / profile-content
-=========================================================
-*/
-
-"use strict";
-
-/* =======================================================
-   APP-ZUSTAND
-======================================================= */
-
 const app = {
-    questionIndex: 0,
+    currentQuestion: 0,
     answers: [],
-    results: [],
-    winner: null,
-    locked: false,
-    running: false
+    results: []
 };
 
-
-/* =======================================================
-   DOM
-======================================================= */
-
-function $(id) {
-    return document.getElementById(id);
+function normalizeAnswer(answer) {
+    if (answer === 1 || answer === "yes") return 1;
+    if (answer === -1 || answer === "no") return -1;
+    return 0;
 }
 
-const el = {
-    startScreen: $("start-screen"),
-    quizScreen: $("quiz-screen"),
-    resultScreen: $("result-screen"),
-    profileScreen: $("profile-screen"),
+function calculateFaction(key) {
+    let earned = 0;
+    let maximum = 0;
 
-    startBtn: $("start-btn"),
-    restartBtn: $("restart-btn"),
-    backBtn: $("back-btn"),
+    questions.forEach((question, index) => {
+        const answer = normalizeAnswer(app.answers[index]);
+        const factionWeight = Number(question.weights[key] ?? 0);
+        const importance = Math.abs(factionWeight);
 
-    questionText: $("question-text"),
-    questionCounter: $("question-counter"),
-    progress: $("progress"),
+        if (importance === 0) {
+            return;
+        }
 
-    yesBtn: $("btn-yes"),
-    neutralBtn: $("btn-neutral"),
-    noBtn: $("btn-no"),
+        // Positive Fraktionsposition: Zustimmung passt.
+        // Negative Fraktionsposition: Ablehnung passt.
+        const agreement = factionWeight > 0
+            ? (answer + 1) / 2
+            : (1 - answer) / 2;
 
-    wingCard: $("wing-card"),
-    wingName: $("wing-name"),
-    wingDescription: $("wing-description"),
-
-    axisCard: $("axis-card"),
-    politicalAxis: $("political-axis"),
-
-    winnerCard: $("winner-card"),
-    winnerName: $("winner-name"),
-    winnerPercent: $("winner-percent"),
-    winnerDescription: $("winner-description"),
-
-    historyCard: $("history-card"),
-    historyText: $("history-text"),
-
-    rankingList: $("ranking-list"),
-
-    profileTitle: $("profile-title"),
-    profileContent: $("profile-content")
-};
-
-
-/* =======================================================
-   VALIDIERUNG
-======================================================= */
-
-function dataIsAvailable() {
-    return (
-        typeof questions !== "undefined" &&
-        Array.isArray(questions) &&
-        questions.length > 0 &&
-        typeof factions !== "undefined" &&
-        factions !== null &&
-        typeof factions === "object" &&
-        Object.keys(factions).length > 0
-    );
-}
-
-
-/* =======================================================
-   SCREEN-MANAGEMENT
-======================================================= */
-
-function showScreen(screen) {
-    [el.startScreen, el.quizScreen, el.resultScreen, el.profileScreen]
-        .forEach(item => {
-            if (item) item.classList.add("hidden");
-        });
-
-    if (screen) {
-        screen.classList.remove("hidden");
-    }
-
-    window.scrollTo({
-        top: 0,
-        behavior: "smooth"
+        earned += agreement * importance;
+        maximum += importance;
     });
-}
 
-
-/* =======================================================
-   START
-======================================================= */
-
-function startQuiz() {
-    app.questionIndex = 0;
-    app.answers = [];
-    app.results = [];
-    app.winner = null;
-    app.locked = false;
-    app.running = true;
-
-    clearResults();
-
-    showScreen(el.quizScreen);
-    loadQuestion();
-}
-
-
-/* =======================================================
-   FRAGE LADEN
-======================================================= */
-
-function loadQuestion() {
-    const question = questions[app.questionIndex];
-
-    if (!question) {
-        finishQuiz();
-        return;
+    if (maximum === 0) {
+        return { percent: 0, score: 0 };
     }
 
-    el.questionText.textContent = question.text;
-
-    el.questionCounter.textContent =
-        `Frage ${app.questionIndex + 1} von ${questions.length}`;
-
-    const progress =
-        app.questionIndex / questions.length * 100;
-
-    el.progress.style.width = `${progress}%`;
-
-    setButtonsEnabled(true);
-
-    app.locked = false;
+    return {
+        percent: Math.round((earned / maximum) * 100),
+        score: earned
+    };
 }
-
-
-/* =======================================================
-   ANTWORT
-======================================================= */
-
-function answer(value) {
-    if (!app.running || app.locked) {
-        return;
-    }
-
-    app.locked = true;
-    setButtonsEnabled(false);
-
-    app.answers[app.questionIndex] = value;
-
-    const button =
-        value === 1
-            ? el.yesBtn
-            : value === 0
-                ? el.neutralBtn
-                : el.noBtn;
-
-    animateButton(button);
-
-    window.setTimeout(() => {
-        app.questionIndex++;
-
-        if (app.questionIndex >= questions.length) {
-            finishQuiz();
-        } else {
-            loadQuestion();
-        }
-    }, 220);
-}
-
-
-/* =======================================================
-   BUTTONS
-======================================================= */
-
-function setButtonsEnabled(enabled) {
-    el.yesBtn.disabled = !enabled;
-    el.neutralBtn.disabled = !enabled;
-    el.noBtn.disabled = !enabled;
-}
-
-
-function animateButton(button) {
-    if (!button || !button.animate) {
-        return;
-    }
-
-    button.animate(
-        [
-            { transform: "scale(1)" },
-            { transform: "scale(.96)" },
-            { transform: "scale(1)" }
-        ],
-        {
-            duration: 180,
-            easing: "ease-out"
-        }
-    );
-}
-
-
-/* =======================================================
-   QUIZ ENDE
-======================================================= */
-
-function finishQuiz() {
-    app.running = false;
-
-    el.progress.style.width = "100%";
-
-    calculateResults();
-
-    if (!app.winner) {
-        return;
-    }
-
-    /*
-     * Alle Ergebnisbereiche werden hier explizit und
-     * unabhängig voneinander befüllt.
-     */
-    renderWing();
-    renderAxis();
-    renderWinner();
-    renderHistory();
-    renderRanking();
-
-    showScreen(el.resultScreen);
-}
-
-
-/* =======================================================
-   MATCHING
-=======================================================
-
-   Antwort:
-   +1 = Zustimmung
-    0 = neutral
-   -1 = Ablehnung
-
-   Fraktionsgewicht:
-   +3 = starke Zustimmung
-   +2 = deutliche Zustimmung
-   +1 = leichte Zustimmung
-    0 = keine klare Position
-   -1 = leichte Ablehnung
-   -2 = deutliche Ablehnung
-   -3 = starke Ablehnung
-
-   Für jede Frage wird die Nähe zwischen Nutzerantwort
-   und Fraktionsposition berechnet.
-======================================================= */
 
 function calculateResults() {
-    const keys = Object.keys(factions);
+    const results = [];
 
-    app.results = keys.map(key => {
+    Object.keys(fraktions).forEach(key => {
         const result = calculateFaction(key);
 
-        return {
-            key,
-            faction: factions[key],
-            percent: result.percent,
-            score: result.score
-        };
+        results.push({
+            key: key,
+            ...result
+        });
     });
 
-    app.results.sort((a, b) => {
+    results.sort((a, b) => {
         if (b.percent !== a.percent) {
             return b.percent - a.percent;
         }
@@ -308,677 +63,180 @@ function calculateResults() {
         return b.score - a.score;
     });
 
-    app.winner = app.results[0] || null;
+    return results;
 }
 
-
-function calculateFaction(key) {
-    let totalMatch = 0;
-    let totalImportance = 0;
-
-    questions.forEach((question, index) => {
-        const answerValue = normalizeAnswer(
-            app.answers[index]
-        );
-
-        const factionValue = Number(
-            question.weights[key] ?? 0
-        );
-
-        const importance = Math.abs(factionValue);
-
-        if (importance === 0) {
-            return;
-        }
-
-        const factionPosition = factionValue / 3;
-
-        const distance =
-            Math.abs(
-                answerValue - factionPosition
-            ) / 2;
-
-        const match = 1 - distance;
-
-        totalMatch += match * importance;
-        totalImportance += importance;
+function showScreen(screenId) {
+    document.querySelectorAll(".screen").forEach(screen => {
+        screen.classList.remove("active");
     });
 
-    if (totalImportance === 0) {
-        return {
-            percent: 50,
-            score: 0
-        };
-    }
+    const screen = document.getElementById(screenId);
 
-    return {
-        percent: Math.round(
-            totalMatch / totalImportance * 100
-        ),
-        score: totalMatch
-    };
-}
-
-
-function normalizeAnswer(value) {
-    if (value === 1 || value === "1") {
-        return 1;
-    }
-
-    if (value === -1 || value === "-1") {
-        return -1;
-    }
-
-    return 0;
-}
-
-
-/* =======================================================
-   POLITISCHER FLÜGEL
-======================================================= */
-
-function renderWing() {
-    const result = app.winner;
-    const faction = result.faction;
-
-    /*
-     * Direkter Zugriff auf die IDs aus der aktuellen
-     * index.html. Kein Zwischenschritt über andere Objekte.
-     */
-    if (el.wingName) {
-        el.wingName.textContent =
-            faction.wing || faction.ideology || faction.name;
-
-        el.wingName.style.color = faction.color;
-    }
-
-    if (el.wingDescription) {
-        el.wingDescription.textContent =
-            `${faction.name} wird dem ${faction.wing || "politischen Spektrum"} zugeordnet. ` +
-            `Die im FraktionsFinder hinterlegte ideologische Einordnung lautet ` +
-            `"${faction.ideology || "keine nähere Angabe"}". ` +
-            `Deine Übereinstimmung mit dieser Fraktion beträgt ${result.percent} %.`;
-
-        el.wingDescription.style.color = "#2b2b2b";
-    }
-
-    if (el.wingCard) {
-        el.wingCard.style.background =
-            "linear-gradient(135deg,#f7f7f7,#ececec)";
-
-        el.wingCard.style.color = "#2b2b2b";
-        el.wingCard.style.borderTop =
-            `6px solid ${faction.color}`;
+    if (screen) {
+        screen.classList.add("active");
     }
 }
 
+function startQuiz() {
+    app.currentQuestion = 0;
+    app.answers = [];
 
-/* =======================================================
-   POLITISCHE ACHSE
-======================================================= */
+    showScreen("quiz-screen");
+    showQuestion();
+}
 
-const axisPositions = {
-    donnersberg: 5,
-    deutscherhof: 18,
-    westendhall: 32,
-    augsburgerhof: 46,
-    cafemilani: 60,
-    landsberg: 73,
-    wuerttembergerhof: 87,
-    casino: 97
-};
+function showQuestion() {
+    const question = questions[app.currentQuestion];
 
-
-function renderAxis() {
-    if (!el.politicalAxis) {
+    if (!question) {
+        showResults();
         return;
     }
 
-    let sum = 0;
-    let weight = 0;
+    document.getElementById("question-text").textContent = question.text;
 
-    app.results.forEach(result => {
-        const position = axisPositions[result.key];
+    document.getElementById("progress").style.width =
+        `${((app.currentQuestion + 1) / questions.length) * 100}%`;
 
-        if (typeof position !== "number") {
-            return;
-        }
+    document.getElementById("question-counter").textContent =
+        `Frage ${app.currentQuestion + 1} von ${questions.length}`;
+}
 
-        const resultWeight =
-            Math.max(result.percent, 1);
+function answerQuestion(answer) {
+    app.answers[app.currentQuestion] = answer;
 
-        sum += position * resultWeight;
-        weight += resultWeight;
-    });
+    app.currentQuestion++;
 
-    const position =
-        weight > 0
-            ? clamp(Math.round(sum / weight), 5, 95)
-            : 50;
-
-    const label = axisLabel(position);
-
-    el.politicalAxis.innerHTML = `
-        <div class="axis">
-            <div class="axis-radikal"></div>
-            <div class="axis-demokratisch"></div>
-            <div class="axis-liberal"></div>
-            <div class="axis-konservativ"></div>
-        </div>
-
-        <div class="axis-labels">
-            <span>Radikaldemokratisch</span>
-            <span>Demokratisch</span>
-            <span>Liberal</span>
-            <span>Konservativ</span>
-        </div>
-
-        <div
-            class="axis-marker"
-            style="left:${position}%"
-        >
-            <span>${escapeHTML(label)}</span>
-        </div>
-    `;
-
-    if (el.axisCard) {
-        el.axisCard.style.backgroundColor = "#f7f7f7";
-        el.axisCard.style.color = "#2b2b2b";
+    if (app.currentQuestion >= questions.length) {
+        showResults();
+    } else {
+        showQuestion();
     }
 }
 
+function showResults() {
+    app.results = calculateResults();
 
-function axisLabel(position) {
-    if (position < 20) {
-        return "radikaldemokratisch";
-    }
+    const winner = app.results[0];
+    const faction = fraktions[winner.key];
 
-    if (position < 42) {
-        return "demokratisch";
-    }
+    document.getElementById("wing-name").textContent =
+        faction.wing || "";
 
-    if (position < 65) {
-        return "liberal";
-    }
+    document.getElementById("wing-description").textContent =
+        faction.wingDescription || "";
 
-    if (position < 82) {
-        return "liberal-konservativ";
-    }
+    document.getElementById("political-axis").textContent =
+        faction.ideology || "";
 
-    return "konservativ";
-}
-
-
-/* =======================================================
-   SIEGER
-======================================================= */
-
-function renderWinner() {
-    const result = app.winner;
-    const faction = result.faction;
-
-    el.winnerName.textContent =
+    document.getElementById("winner-name").textContent =
         faction.name;
 
-    el.winnerPercent.textContent =
-        `${result.percent} % Übereinstimmung`;
+    document.getElementById("winner-percent").textContent =
+        `${winner.percent}%`;
 
-    el.winnerDescription.textContent =
-        faction.shortDescription;
+    document.getElementById("winner-description").textContent =
+        faction.description;
 
-    el.winnerCard.style.backgroundColor =
-        faction.color;
+    document.getElementById("history-text").textContent =
+        faction.history || "";
 
-    el.winnerCard.style.color =
-        readableTextColor(faction.color);
+    const rankingList = document.getElementById("ranking-list");
 
-    el.winnerName.style.color =
-        readableTextColor(faction.color);
-
-    el.winnerPercent.style.color =
-        readableTextColor(faction.color);
-
-    el.winnerDescription.style.color =
-        readableTextColor(faction.color);
-}
-
-
-/* =======================================================
-   HISTORISCHE EINORDNUNG
-======================================================= */
-
-function renderHistory() {
-    const result = app.winner;
-    const faction = result.faction;
-
-    if (!el.historyText) {
-        return;
-    }
-
-    const positions =
-        Array.isArray(faction.positions)
-            ? faction.positions.slice(0, 4)
-            : [];
-
-    const representatives =
-        Array.isArray(faction.representatives)
-            ? faction.representatives.slice(0, 3)
-            : [];
-
-    let text =
-        `Deine größte Übereinstimmung besteht mit der Fraktion ` +
-        `${faction.name} (${result.percent} %). `;
-
-    text += faction.description;
-
-    if (positions.length) {
-        text +=
-            ` Zu den im FraktionsFinder hinterlegten zentralen ` +
-            `Positionen gehören ${positions.join(", ")}.`;
-    }
-
-    if (representatives.length) {
-        text +=
-            ` Als Vertreter sind unter anderem ` +
-            `${representatives.join(", ")} angegeben.`;
-    }
-
-    el.historyText.textContent = text;
-
-    el.historyText.style.color = "#2b2b2b";
-
-    if (el.historyCard) {
-        el.historyCard.style.backgroundColor = "#faf8f2";
-        el.historyCard.style.color = "#2b2b2b";
-        el.historyCard.style.borderLeftColor =
-            faction.color;
-    }
-}
-
-
-/* =======================================================
-   RANKING
-======================================================= */
-
-function renderRanking() {
-    el.rankingList.innerHTML = "";
+    rankingList.innerHTML = "";
 
     app.results.forEach((result, index) => {
-        const item = document.createElement("div");
+        const factionData = fraktions[result.key];
 
-        item.className = "ranking-item";
-        item.tabIndex = 0;
+        const li = document.createElement("li");
 
-        const label = document.createElement("div");
-        label.className = "ranking-label";
+        li.innerHTML = `
+            <span class="ranking-position">${index + 1}.</span>
+            <span class="ranking-name">${factionData.name}</span>
+            <span class="ranking-percent">${result.percent}%</span>
+        `;
 
-        const name = document.createElement("strong");
-        name.textContent =
-            `${index + 1}. ${result.faction.name}`;
-
-        const percent = document.createElement("span");
-        percent.textContent =
-            `${result.percent} %`;
-
-        label.appendChild(name);
-        label.appendChild(percent);
-
-        const bar = document.createElement("div");
-        bar.className = "bar";
-
-        const fill = document.createElement("div");
-        fill.className = "bar-fill";
-
-        fill.style.backgroundColor =
-            result.faction.color;
-
-        fill.style.width = "0%";
-
-        bar.appendChild(fill);
-
-        item.appendChild(label);
-        item.appendChild(bar);
-
-        item.addEventListener("click", () => {
-            openProfile(result.key);
-        });
-
-        item.addEventListener("keydown", event => {
-            if (
-                event.key === "Enter" ||
-                event.key === " "
-            ) {
-                event.preventDefault();
-                openProfile(result.key);
-            }
-        });
-
-        el.rankingList.appendChild(item);
-
-        window.setTimeout(() => {
-            fill.style.width =
-                `${result.percent}%`;
-        }, 50 + index * 70);
+        rankingList.appendChild(li);
     });
+
+    showScreen("result-screen");
 }
 
+function restartQuiz() {
+    app.currentQuestion = 0;
+    app.answers = [];
+    app.results = [];
 
-/* =======================================================
-   PROFIL
-======================================================= */
+    showScreen("start-screen");
+}
 
-function openProfile(key) {
-    const faction = factions[key];
+function showProfile(key) {
+    const faction = fraktions[key];
 
     if (!faction) {
         return;
     }
 
-    el.profileTitle.textContent =
+    document.getElementById("profile-title").textContent =
         faction.name;
 
-    el.profileTitle.style.color =
-        faction.color;
-
-    const representatives =
-        Array.isArray(faction.representatives)
-            ? faction.representatives
-            : [];
-
-    const positions =
-        Array.isArray(faction.positions)
-            ? faction.positions
-            : [];
-
-    el.profileContent.innerHTML = `
-        <p>
-            <strong>Politische Einordnung:</strong>
-            ${escapeHTML(faction.wing || "")}
-        </p>
-
-        <p>
-            <strong>Ideologie:</strong>
-            ${escapeHTML(faction.ideology || "")}
-        </p>
-
-        <h3>Beschreibung</h3>
-
-        <p>
-            ${escapeHTML(faction.description || "")}
-        </p>
-
-        <h3>Bekannte Vertreter</h3>
-
+    document.getElementById("profile-content").innerHTML = `
+        <h3>${faction.wing || ""}</h3>
+        <p>${faction.description || ""}</p>
+        <h4>Vertreter</h4>
+        <p>${(faction.representatives || []).join(", ")}</p>
+        <h4>Positionen</h4>
         <ul>
-            ${
-                representatives
-                    .map(person =>
-                        `<li>${escapeHTML(person)}</li>`
-                    )
-                    .join("")
-            }
-        </ul>
-
-        <h3>Typische Positionen</h3>
-
-        <ul>
-            ${
-                positions
-                    .map(position =>
-                        `<li>${escapeHTML(position)}</li>`
-                    )
-                    .join("")
-            }
+            ${(faction.positions || [])
+                .map(position => `<li>${position}</li>`)
+                .join("")}
         </ul>
     `;
 
-    showScreen(el.profileScreen);
+    showScreen("profile-screen");
 }
 
-
-/* =======================================================
-   ZURÜCK
-======================================================= */
-
-function backToResults() {
-    showScreen(el.resultScreen);
+function goBack() {
+    showScreen("result-screen");
 }
 
+document.addEventListener("DOMContentLoaded", () => {
+    const yesButton = document.getElementById("btn-yes");
+    const neutralButton = document.getElementById("btn-neutral");
+    const noButton = document.getElementById("btn-no");
+    const restartButton = document.getElementById("restart-btn");
+    const backButton = document.getElementById("back-btn");
 
-/* =======================================================
-   NEUSTART
-======================================================= */
-
-function restartQuiz() {
-    app.questionIndex = 0;
-    app.answers = [];
-    app.results = [];
-    app.winner = null;
-    app.running = false;
-    app.locked = false;
-
-    clearResults();
-
-    showScreen(el.startScreen);
-}
-
-
-/* =======================================================
-   ERGEBNISSE LEEREN
-======================================================= */
-
-function clearResults() {
-    if (el.wingName) {
-        el.wingName.textContent = "";
+    if (yesButton) {
+        yesButton.addEventListener("click", () => {
+            answerQuestion(1);
+        });
     }
 
-    if (el.wingDescription) {
-        el.wingDescription.textContent = "";
+    if (neutralButton) {
+        neutralButton.addEventListener("click", () => {
+            answerQuestion(0);
+        });
     }
 
-    if (el.politicalAxis) {
-        el.politicalAxis.innerHTML = "";
+    if (noButton) {
+        noButton.addEventListener("click", () => {
+            answerQuestion(-1);
+        });
     }
 
-    if (el.winnerName) {
-        el.winnerName.textContent = "";
+    if (restartButton) {
+        restartButton.addEventListener("click", restartQuiz);
     }
 
-    if (el.winnerPercent) {
-        el.winnerPercent.textContent = "";
+    if (backButton) {
+        backButton.addEventListener("click", goBack);
     }
 
-    if (el.winnerDescription) {
-        el.winnerDescription.textContent = "";
-    }
-
-    if (el.historyText) {
-        el.historyText.textContent = "";
-    }
-
-    if (el.rankingList) {
-        el.rankingList.innerHTML = "";
-    }
-}
-
-
-/* =======================================================
-   HILFSFUNKTIONEN
-======================================================= */
-
-function clamp(value, min, max) {
-    return Math.min(
-        Math.max(value, min),
-        max
-    );
-}
-
-
-function escapeHTML(value) {
-    return String(value)
-        .replaceAll("&", "&amp;")
-        .replaceAll("<", "&lt;")
-        .replaceAll(">", "&gt;")
-        .replaceAll('"', "&quot;")
-        .replaceAll("'", "&#039;");
-}
-
-
-function readableTextColor(hex) {
-    if (
-        typeof hex !== "string" ||
-        !/^#[0-9a-f]{6}$/i.test(hex)
-    ) {
-        return "#ffffff";
-    }
-
-    const r = parseInt(hex.slice(1, 3), 16);
-    const g = parseInt(hex.slice(3, 5), 16);
-    const b = parseInt(hex.slice(5, 7), 16);
-
-    const brightness =
-        (r * 299 + g * 587 + b * 114) / 1000;
-
-    return brightness > 155
-        ? "#222222"
-        : "#ffffff";
-}
-
-
-/* =======================================================
-   KEYBOARD
-======================================================= */
-
-function keyboard(event) {
-    if (
-        !app.running ||
-        app.locked
-    ) {
-        return;
-    }
-
-    switch (event.key) {
-        case "1":
-        case "ArrowLeft":
-            answer(1);
-            break;
-
-        case "2":
-        case "ArrowDown":
-            answer(0);
-            break;
-
-        case "3":
-        case "ArrowRight":
-            answer(-1);
-            break;
-    }
-}
-
-
-/* =======================================================
-   EVENTS
-======================================================= */
-
-function registerEvents() {
-    el.startBtn.addEventListener(
-        "click",
-        startQuiz
-    );
-
-    el.restartBtn.addEventListener(
-        "click",
-        restartQuiz
-    );
-
-    el.backBtn.addEventListener(
-        "click",
-        backToResults
-    );
-
-    el.yesBtn.addEventListener(
-        "click",
-        () => answer(1)
-    );
-
-    el.neutralBtn.addEventListener(
-        "click",
-        () => answer(0)
-    );
-
-    el.noBtn.addEventListener(
-        "click",
-        () => answer(-1)
-    );
-
-    document.addEventListener(
-        "keydown",
-        keyboard
-    );
-
-    document.addEventListener(
-        "keydown",
-        event => {
-            if (
-                event.key === "Escape" &&
-                !el.profileScreen.classList.contains("hidden")
-            ) {
-                backToResults();
-            }
-        }
-    );
-}
-
-
-/* =======================================================
-   STARTINITIALISIERUNG
-======================================================= */
-
-function init() {
-    if (!dataIsAvailable()) {
-        console.error(
-            "FraktionsFinder: questions.js oder fraktionen.js fehlt."
-        );
-
-        return;
-    }
-
-    registerEvents();
-
-    showScreen(el.startScreen);
-
-    console.log(
-        "FraktionsFinder 1848 – script.js v5.0 geladen."
-    );
-}
-
-
-/* =======================================================
-   ÖFFENTLICHE DEBUG-FUNKTIONEN
-======================================================= */
-
-window.FraktionsFinder = {
-    getResults: () => app.results,
-    getWinner: () => app.winner,
-    getAnswers: () => [...app.answers],
-    renderWing,
-    renderAxis,
-    renderWinner,
-    renderHistory,
-    renderRanking
-};
-
-
-/* =======================================================
-   START
-======================================================= */
-
-if (document.readyState === "loading") {
-    document.addEventListener(
-        "DOMContentLoaded",
-        init,
-        { once: true }
-    );
-} else {
-    init();
-}
+    document.querySelectorAll("[data-faction]").forEach(element => {
+        element.addEventListener("click", () => {
+            showProfile(element.dataset.faction);
+        });
+    });
+});
