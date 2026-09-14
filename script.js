@@ -415,11 +415,11 @@ const axisPositions = {
     donnersberg: 5,
     deutscherhof: 18,
     westendhall: 32,
-    augsburgerhof: 46,
-    cafemilani: 60,
+    wuerttembergerhof: 46,
+    augsburgerhof: 60,
     landsberg: 73,
-    wuerttembergerhof: 87,
-    casino: 97
+    casino: 87,
+    cafemilani: 98
 };
 
 
@@ -487,23 +487,36 @@ function renderAxis() {
 
 
 function axisLabel(position) {
-    if (position < 20) {
-        return "radikaldemokratisch";
+    
+    if (position < 15) {
+        return "äußerste Linke / radikaldemokratisch";
     }
 
-    if (position < 42) {
-        return "demokratisch";
+    if (position < 25) {
+        return "demokratische Linke";
     }
 
-    if (position < 65) {
-        return "liberal";
+    if (position < 40) {
+        return "gemäßigt demokratisch";
+    }
+
+    if (position < 55) {
+        return "linksliberal";
+    }
+
+    if (position < 68) {
+        return "liberales Zentrum";
     }
 
     if (position < 82) {
-        return "liberal-konservativ";
+        return "rechtes Zentrum";
     }
 
-    return "konservativ";
+    if (position < 94) {
+        return "liberalkonservativ";
+    }
+
+    return "rechtskonservativ";
 }
 
 

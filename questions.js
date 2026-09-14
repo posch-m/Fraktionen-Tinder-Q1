@@ -1,142 +1,205 @@
+/*
+========================================================
+FraktionsFinder 1848
+questions.js
+Historische Gewichtung nach dem Deutschen Historischen Museum
+========================================================
+
+Antwort:
++1 = Ja
+ 0 = Neutral
+-1 = Nein
+
+Gewichtung:
++3 = starke Übereinstimmung
++2 = deutliche Übereinstimmung
++1 = leichte Übereinstimmung
+ 0 = keine klare Position
+-1 = leichte Gegenposition
+-2 = deutliche Gegenposition
+-3 = starke Gegenposition
+========================================================
+*/
+
 const questions = [
+
     {
-        id: "p4rex4",
-        text: "Soll Deutschland eine konstitutionelle Monarchie mit einem erblichen Kaiser an der Spitze werden?",
+        id: "monarchie",
+        text:
+            "Deutschland soll eine konstitutionelle Monarchie mit einem erblichen Kaiser als Staatsoberhaupt erhalten.",
+
         weights: {
-            casino: 3,
-            wuerttembergerhof: 2,
-            landsberg: 3,
             cafemilani: 3,
-            augsburgerhof: 2,
+            casino: 3,
+            landsberg: 3,
+            augsburgerhof: 3,
+            wuerttembergerhof: 3,
             westendhall: -2,
             deutscherhof: -3,
             donnersberg: -3
         }
     },
+
+
     {
-        id: "rayqj3",
-        text: "Soll Deutschland eine Republik werden, in der die politische Macht vom Volk ausgeht?",
+        id: "republik",
+        text:
+            "Deutschland sollte statt einer Monarchie eine Republik werden.",
+
         weights: {
-            casino: -3,
-            wuerttembergerhof: -3,
-            landsberg: -3,
             cafemilani: -3,
-            augsburgerhof: -2,
+            casino: -3,
+            landsberg: -3,
+            augsburgerhof: -3,
+            wuerttembergerhof: -3,
             westendhall: 2,
             deutscherhof: 3,
             donnersberg: 3
         }
     },
+
+
     {
-        id: "6jh0r7",
-        text: "Soll das allgemeine und gleiche Wahlrecht für Männer eingeführt werden?",
+        id: "wahlrecht",
+        text:
+            "Die Volksvertretung soll durch eine allgemeine, gleiche und direkte Wahl bestimmt werden.",
+
         weights: {
-            casino: -2,
-            wuerttembergerhof: 0,
-            landsberg: -1,
-            cafemilani: -3,
-            augsburgerhof: 1,
-            westendhall: 3,
+            cafemilani: -2,
+            casino: -1,
+            landsberg: 0,
+            augsburgerhof: 0,
+            wuerttembergerhof: 1,
+            westendhall: 2,
             deutscherhof: 3,
             donnersberg: 3
         }
     },
+
+
     {
-        id: "0miasa",
-        text: "Sollten die einzelnen deutschen Staaten ihre Eigenständigkeit und ihre bisherigen Rechte weitgehend behalten?",
+        id: "einzelstaaten",
+        text:
+            "Die deutschen Einzelstaaten sollen auch nach der Reichsgründung weitgehend selbstständig bleiben.",
+
         weights: {
-            casino: 1,
-            wuerttembergerhof: 2,
-            landsberg: 1,
             cafemilani: 3,
+            casino: 2,
+            landsberg: 1,
             augsburgerhof: 1,
-            westendhall: -1,
+            wuerttembergerhof: 2,
+            westendhall: 1,
             deutscherhof: -2,
             donnersberg: -2
         }
     },
+
+
     {
-        id: "88tuj8",
-        text: "Braucht ein geeintes Deutschland eine starke zentrale Regierung?",
+        id: "zentralgewalt",
+        text:
+            "Deutschland braucht eine starke Zentralgewalt, auch wenn die Einzelstaaten dadurch Macht verlieren.",
+
         weights: {
-            casino: 3,
-            wuerttembergerhof: 1,
-            landsberg: 2,
-            cafemilani: -2,
-            augsburgerhof: 2,
-            westendhall: 1,
-            deutscherhof: 2,
-            donnersberg: 2
-        }
-    },
-    {
-        id: "a15asz",
-        text: "Soll der Staat stärker in soziale und wirtschaftliche Fragen eingreifen, um soziale Not zu bekämpfen?",
-        weights: {
-            casino: -2,
-            wuerttembergerhof: -1,
-            landsberg: -1,
-            cafemilani: -2,
-            augsburgerhof: 1,
-            westendhall: 2,
-            deutscherhof: 3,
-            donnersberg: 3
-        }
-    },
-    {
-        id: "lkwxoe",
-        text: "Soll die Revolution von 1848 konsequent weitergeführt werden, auch wenn dadurch bestehende Herrschaftsverhältnisse gefährdet werden?",
-        weights: {
-            casino: -3,
-            wuerttembergerhof: -3,
-            landsberg: -3,
             cafemilani: -3,
-            augsburgerhof: -1,
-            westendhall: 1,
-            deutscherhof: 2,
-            donnersberg: 3
-        }
-    },
-    {
-        id: "ou9tsn",
-        text: "Soll der neue deutsche Staat umfassende Grund- und Freiheitsrechte garantieren?",
-        weights: {
-            casino: 2,
-            wuerttembergerhof: 2,
+            casino: 3,
             landsberg: 2,
-            cafemilani: 0,
-            augsburgerhof: 3,
-            westendhall: 3,
-            deutscherhof: 3,
-            donnersberg: 3
+            augsburgerhof: 2,
+            wuerttembergerhof: 1,
+            westendhall: 1,
+            deutscherhof: 1,
+            donnersberg: 1
         }
     },
+
+
     {
-        id: "osxdtc",
-        text: "Soll die Regierung vom Vertrauen des Parlaments abhängig sein und von ihm kontrolliert werden?",
+        id: "parlament",
+        text:
+            "Die Regierung soll vom Vertrauen des Parlaments abhängig sein und von ihm kontrolliert werden.",
+
         weights: {
+            cafemilani: -3,
             casino: -1,
-            wuerttembergerhof: 3,
             landsberg: 2,
-            cafemilani: -3,
-            augsburgerhof: 3,
+            augsburgerhof: 2,
+            wuerttembergerhof: 3,
             westendhall: 3,
             deutscherhof: 3,
             donnersberg: 3
         }
     },
+
+
     {
-        id: "ubxkd6",
-        text: "Soll die nationale Einheit wichtiger sein als die Interessen der einzelnen Fürsten und Staaten?",
+        id: "nationalversammlung",
+        text:
+            "Die Nationalversammlung soll eine eigenständige politische Macht besitzen und die zukünftige Verfassung maßgeblich bestimmen.",
+
         weights: {
-            casino: 3,
-            wuerttembergerhof: 1,
-            landsberg: 2,
-            cafemilani: -2,
-            augsburgerhof: 2,
+            cafemilani: -3,
+            casino: 2,
+            landsberg: 3,
+            augsburgerhof: 3,
+            wuerttembergerhof: 3,
             westendhall: 3,
             deutscherhof: 3,
-            donnersberg: 2
+            donnersberg: 3
+        }
+    },
+
+
+    {
+        id: "revolution",
+        text:
+            "Die politischen Ziele der Revolution von 1848 sollen notfalls auch durch weitere revolutionäre Aktionen durchgesetzt werden.",
+
+        weights: {
+            cafemilani: -3,
+            casino: -3,
+            landsberg: -2,
+            augsburgerhof: -2,
+            wuerttembergerhof: -2,
+            westendhall: 0,
+            deutscherhof: 1,
+            donnersberg: 3
+        }
+    },
+
+
+    {
+        id: "volkssouveraenitaet",
+        text:
+            "Die politische Ordnung soll grundsätzlich auf der Volkssouveränität beruhen.",
+
+        weights: {
+            cafemilani: -3,
+            casino: -1,
+            landsberg: 1,
+            augsburgerhof: 1,
+            wuerttembergerhof: 2,
+            westendhall: 3,
+            deutscherhof: 3,
+            donnersberg: 3
+        }
+    },
+
+
+    {
+        id: "staatsgebiet",
+        text:
+            "Bei der deutschen Einigung sollte eine kleindeutsche Lösung unter Ausschluss Österreichs angestrebt werden.",
+
+        weights: {
+            cafemilani: -2,
+            casino: 2,
+            landsberg: 2,
+            augsburgerhof: 3,
+            wuerttembergerhof: -2,
+            westendhall: -1,
+            deutscherhof: 0,
+            donnersberg: 0
         }
     }
+
 ];
