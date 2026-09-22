@@ -1,11 +1,12 @@
 /*
 =========================================================
 FraktionsFinder 1848
-script.js – Version 5.0
+script.js – Version 5.1
 =========================================================
 */
 
 "use strict";
+
 
 /* =======================================================
    APP-ZUSTAND
@@ -91,15 +92,18 @@ function dataIsAvailable() {
 ======================================================= */
 
 function showScreen(screen) {
+
     [
         el.startScreen,
         el.quizScreen,
         el.resultScreen,
         el.profileScreen
     ].forEach(item => {
+
         if (item) {
             item.classList.add("hidden");
         }
+
     });
 
     if (screen) {
@@ -118,6 +122,7 @@ function showScreen(screen) {
 ======================================================= */
 
 function startQuiz() {
+
     app.questionIndex = 0;
     app.answers = [];
     app.results = [];
@@ -137,6 +142,7 @@ function startQuiz() {
 ======================================================= */
 
 function loadQuestion() {
+
     const question = questions[app.questionIndex];
 
     if (!question) {
@@ -165,11 +171,13 @@ function loadQuestion() {
 ======================================================= */
 
 function answer(value) {
+
     if (!app.running || app.locked) {
         return;
     }
 
     app.locked = true;
+
     setButtonsEnabled(false);
 
     app.answers[app.questionIndex] = value;
@@ -184,6 +192,7 @@ function answer(value) {
     animateButton(button);
 
     window.setTimeout(() => {
+
         app.questionIndex++;
 
         if (app.questionIndex >= questions.length) {
@@ -191,6 +200,7 @@ function answer(value) {
         } else {
             loadQuestion();
         }
+
     }, 220);
 }
 
@@ -200,6 +210,7 @@ function answer(value) {
 ======================================================= */
 
 function setButtonsEnabled(enabled) {
+
     el.yesBtn.disabled = !enabled;
     el.neutralBtn.disabled = !enabled;
     el.noBtn.disabled = !enabled;
@@ -207,6 +218,7 @@ function setButtonsEnabled(enabled) {
 
 
 function animateButton(button) {
+
     if (!button || !button.animate) {
         return;
     }
@@ -230,6 +242,7 @@ function animateButton(button) {
 ======================================================= */
 
 function finishQuiz() {
+
     app.running = false;
 
     el.progress.style.width = "100%";
@@ -270,10 +283,13 @@ Fraktionsgewicht:
 -3 = starke Ablehnung
 */
 
+
 function calculateResults() {
+
     const keys = Object.keys(factions);
 
     app.results = keys.map(key => {
+
         const result = calculateFaction(key);
 
         return {
@@ -282,9 +298,11 @@ function calculateResults() {
             percent: result.percent,
             score: result.score
         };
+
     });
 
     app.results.sort((a, b) => {
+
         if (b.percent !== a.percent) {
             return b.percent - a.percent;
         }
@@ -297,14 +315,16 @@ function calculateResults() {
 
 
 /* =======================================================
-   KORRIGIERTE FRaktionsberechnung
+   FRAKTIONSBERECHNUNG
 ======================================================= */
 
 function calculateFaction(key) {
+
     let totalMatch = 0;
     let totalImportance = 0;
 
     questions.forEach((question, index) => {
+
         const answerValue = normalizeAnswer(
             app.answers[index]
         );
@@ -320,13 +340,11 @@ function calculateFaction(key) {
         }
 
         /*
-         * Die Richtung der Fraktionsposition wird berücksichtigt:
+         * Positive Fraktionsposition:
+         * Zustimmung passt.
          *
-         * positive Position (+1 bis +3):
-         * Zustimmung passt, Ablehnung passt nicht.
-         *
-         * negative Position (-1 bis -3):
-         * Ablehnung passt, Zustimmung passt nicht.
+         * Negative Fraktionsposition:
+         * Ablehnung passt.
          *
          * Neutral liegt jeweils genau dazwischen.
          */
@@ -337,13 +355,16 @@ function calculateFaction(key) {
 
         totalMatch += agreement * importance;
         totalImportance += importance;
+
     });
 
     if (totalImportance === 0) {
+
         return {
             percent: 0,
             score: 0
         };
+
     }
 
     return {
@@ -356,6 +377,7 @@ function calculateFaction(key) {
 
 
 function normalizeAnswer(value) {
+
     if (value === 1 || value === "1") {
         return 1;
     }
@@ -373,33 +395,40 @@ function normalizeAnswer(value) {
 ======================================================= */
 
 function renderWing() {
+
     const result = app.winner;
     const faction = result.faction;
 
     if (el.wingName) {
+
         el.wingName.textContent =
             faction.wing ||
             faction.ideology ||
             faction.name;
 
-        el.wingName.style.color = faction.color;
+        el.wingName.style.color =
+            faction.color;
     }
 
     if (el.wingDescription) {
+
         el.wingDescription.textContent =
             `${faction.name} wird dem ${faction.wing || "politischen Spektrum"} zugeordnet. ` +
             `Die im FraktionsFinder hinterlegte ideologische Einordnung lautet ` +
             `"${faction.ideology || "keine nähere Angabe"}". ` +
             `Deine Übereinstimmung mit dieser Fraktion beträgt ${result.percent} %.`;
 
-        el.wingDescription.style.color = "#2b2b2b";
+        el.wingDescription.style.color =
+            "#2b2b2b";
     }
 
     if (el.wingCard) {
+
         el.wingCard.style.background =
             "linear-gradient(135deg,#f7f7f7,#ececec)";
 
-        el.wingCard.style.color = "#2b2b2b";
+        el.wingCard.style.color =
+            "#2b2b2b";
 
         el.wingCard.style.borderTop =
             `6px solid ${faction.color}`;
@@ -411,19 +440,42 @@ function renderWing() {
    POLITISCHE ACHSE
 ======================================================= */
 
+/*
+Historische Reihenfolge:
+
+Donnersberg
+→ Deutscher Hof
+→ Westendhall
+→ Württemberger Hof
+→ Augsburger Hof
+→ Landsberg
+→ Casino
+→ Café Milani
+*/
+
 const axisPositions = {
-   donnersberg: 5,
+
+    donnersberg: 5,
+
     deutscherhof: 20,
+
     westendhall: 35,
+
     wuerttembergerhof: 48,
+
     augsburgerhof: 60,
+
     landsberg: 73,
+
     casino: 87,
+
     cafemilani: 98
+
 };
 
 
 function renderAxis() {
+
     if (!el.politicalAxis) {
         return;
     }
@@ -432,17 +484,26 @@ function renderAxis() {
     let weight = 0;
 
     app.results.forEach(result => {
-        const position = axisPositions[result.key];
+
+        const position =
+            axisPositions[result.key];
 
         if (typeof position !== "number") {
             return;
         }
+
+        /*
+         * Die Übereinstimmung der Fraktionen
+         * bestimmt, wie stark sie die eigene
+         * Position auf der Achse beeinflussen.
+         */
 
         const resultWeight =
             Math.max(result.percent, 1);
 
         sum += position * resultWeight;
         weight += resultWeight;
+
     });
 
     const position =
@@ -450,73 +511,102 @@ function renderAxis() {
             ? clamp(
                 Math.round(sum / weight),
                 5,
-                95
+                98
             )
             : 50;
 
-    const label = axisLabel(position);
+    const label =
+        axisLabel(position);
+
 
     el.politicalAxis.innerHTML = `
+
         <div class="axis">
+
             <div class="axis-radikal"></div>
+
             <div class="axis-demokratisch"></div>
+
             <div class="axis-liberal"></div>
+
             <div class="axis-konservativ"></div>
+
         </div>
 
+
         <div class="axis-labels">
-            <span>Radikaldemokratisch</span>
-            <span>Demokratisch</span>
-            <span>Liberal</span>
-            <span>Konservativ</span>
+
+            <span>Äußerste Linke</span>
+
+            <span>Demokratische Linke</span>
+
+            <span>Liberales Zentrum</span>
+
+            <span>Rechtskonservativ</span>
+
         </div>
+
 
         <div
             class="axis-marker"
             style="left:${position}%"
         >
-            <span>${escapeHTML(label)}</span>
+
+            <span>
+                ${escapeHTML(label)}
+            </span>
+
         </div>
+
     `;
 
+
     if (el.axisCard) {
-        el.axisCard.style.backgroundColor = "#f7f7f7";
-        el.axisCard.style.color = "#2b2b2b";
+
+        el.axisCard.style.backgroundColor =
+            "#f7f7f7";
+
+        el.axisCard.style.color =
+            "#2b2b2b";
     }
 }
 
 
+/* =======================================================
+   BEZEICHNUNG DER POLITISCHEN POSITION
+======================================================= */
+
 function axisLabel(position) {
-    
-    if (position < 15) {
-        return "äußerste Linke / radikaldemokratisch";
+
+    if (position < 13) {
+        return "Äußerste Linke / radikaldemokratisch";
     }
 
-    if (position < 25) {
-        return "demokratische Linke";
+    if (position < 28) {
+        return "Demokratische Linke";
     }
 
-    if (position < 40) {
-        return "gemäßigt demokratisch";
+    if (position < 42) {
+        return "Gemäßigte Linke";
     }
 
-    if (position < 55) {
-        return "linksliberal";
+    if (position < 54) {
+        return "Linkes Zentrum / linksliberal";
     }
 
-    if (position < 68) {
-        return "liberales Zentrum";
+    if (position < 67) {
+        return "Gemäßigt liberal / Mitte-rechts";
     }
 
-    if (position < 82) {
-        return "rechtes Zentrum";
+    if (position < 80) {
+        return "Liberales rechtes Zentrum";
     }
 
-    if (position < 94) {
-        return "liberalkonservativ";
+    if (position < 93) {
+        return "Rechtes Zentrum / rechtsliberal";
     }
 
-    return "rechtskonservativ";
+    return "Rechtskonservativ";
 }
 
 
@@ -525,6 +615,7 @@ function axisLabel(position) {
 ======================================================= */
 
 function renderWinner() {
+
     const result = app.winner;
     const faction = result.faction;
 
@@ -559,6 +650,7 @@ function renderWinner() {
 ======================================================= */
 
 function renderHistory() {
+
     const result = app.winner;
     const faction = result.faction;
 
@@ -583,24 +675,32 @@ function renderHistory() {
     text += faction.description;
 
     if (positions.length) {
+
         text +=
             ` Zu den im FraktionsFinder hinterlegten zentralen ` +
             `Positionen gehören ${positions.join(", ")}.`;
     }
 
     if (representatives.length) {
+
         text +=
             ` Als Vertreter sind unter anderem ` +
             `${representatives.join(", ")} angegeben.`;
     }
 
-    el.historyText.textContent = text;
+    el.historyText.textContent =
+        text;
 
-    el.historyText.style.color = "#2b2b2b";
+    el.historyText.style.color =
+        "#2b2b2b";
 
     if (el.historyCard) {
-        el.historyCard.style.backgroundColor = "#faf8f2";
-        el.historyCard.style.color = "#2b2b2b";
+
+        el.historyCard.style.backgroundColor =
+            "#faf8f2";
+
+        el.historyCard.style.color =
+            "#2b2b2b";
 
         el.historyCard.style.borderLeftColor =
             faction.color;
@@ -613,48 +713,71 @@ function renderHistory() {
 ======================================================= */
 
 function renderRanking() {
+
     el.rankingList.innerHTML = "";
 
     app.results.forEach((result, index) => {
-        const item = document.createElement("div");
 
-        item.className = "ranking-item";
+        const item =
+            document.createElement("div");
+
+        item.className =
+            "ranking-item";
+
         item.tabIndex = 0;
 
-        const label = document.createElement("div");
 
-        label.className = "ranking-label";
+        const label =
+            document.createElement("div");
 
-        const name = document.createElement("strong");
+        label.className =
+            "ranking-label";
+
+
+        const name =
+            document.createElement("strong");
 
         name.textContent =
             `${index + 1}. ${result.faction.name}`;
 
-        const percent = document.createElement("span");
+
+        const percent =
+            document.createElement("span");
 
         percent.textContent =
             `${result.percent} %`;
 
+
         label.appendChild(name);
         label.appendChild(percent);
 
-        const bar = document.createElement("div");
 
-        bar.className = "bar";
+        const bar =
+            document.createElement("div");
 
-        const fill = document.createElement("div");
+        bar.className =
+            "bar";
 
-        fill.className = "bar-fill";
+
+        const fill =
+            document.createElement("div");
+
+        fill.className =
+            "bar-fill";
 
         fill.style.backgroundColor =
             result.faction.color;
 
-        fill.style.width = "0%";
+        fill.style.width =
+            "0%";
+
 
         bar.appendChild(fill);
 
         item.appendChild(label);
+
         item.appendChild(bar);
+
 
         item.addEventListener(
             "click",
@@ -663,26 +786,35 @@ function renderRanking() {
             }
         );
 
+
         item.addEventListener(
             "keydown",
             event => {
+
                 if (
                     event.key === "Enter" ||
                     event.key === " "
                 ) {
+
                     event.preventDefault();
 
                     openProfile(result.key);
                 }
+
             }
         );
 
+
         el.rankingList.appendChild(item);
 
+
         window.setTimeout(() => {
+
             fill.style.width =
                 `${result.percent}%`;
+
         }, 50 + index * 70);
+
     });
 }
 
@@ -692,7 +824,9 @@ function renderRanking() {
 ======================================================= */
 
 function openProfile(key) {
-    const faction = factions[key];
+
+    const faction =
+        factions[key];
 
     if (!faction) {
         return;
@@ -704,17 +838,21 @@ function openProfile(key) {
     el.profileTitle.style.color =
         faction.color;
 
+
     const representatives =
         Array.isArray(faction.representatives)
             ? faction.representatives
             : [];
+
 
     const positions =
         Array.isArray(faction.positions)
             ? faction.positions
             : [];
 
+
     el.profileContent.innerHTML = `
+
         <p>
             <strong>Politische Einordnung:</strong>
             ${escapeHTML(faction.wing || "")}
@@ -756,6 +894,7 @@ function openProfile(key) {
                     .join("")
             }
         </ul>
+
     `;
 
     showScreen(el.profileScreen);
@@ -776,6 +915,7 @@ function backToResults() {
 ======================================================= */
 
 function restartQuiz() {
+
     app.questionIndex = 0;
     app.answers = [];
     app.results = [];
@@ -794,6 +934,7 @@ function restartQuiz() {
 ======================================================= */
 
 function clearResults() {
+
     if (el.wingName) {
         el.wingName.textContent = "";
     }
@@ -833,6 +974,7 @@ function clearResults() {
 ======================================================= */
 
 function clamp(value, min, max) {
+
     return Math.min(
         Math.max(value, min),
         max
@@ -841,6 +983,7 @@ function clamp(value, min, max) {
 
 
 function escapeHTML(value) {
+
     return String(value)
         .replaceAll("&", "&amp;")
         .replaceAll("<", "&lt;")
@@ -851,6 +994,7 @@ function escapeHTML(value) {
 
 
 function readableTextColor(hex) {
+
     if (
         typeof hex !== "string" ||
         !/^#[0-9a-f]{6}$/i.test(hex)
@@ -858,23 +1002,28 @@ function readableTextColor(hex) {
         return "#ffffff";
     }
 
-    const r = parseInt(
-        hex.slice(1, 3),
-        16
-    );
+    const r =
+        parseInt(
+            hex.slice(1, 3),
+            16
+        );
 
-    const g = parseInt(
-        hex.slice(3, 5),
-        16
-    );
+    const g =
+        parseInt(
+            hex.slice(3, 5),
+            16
+        );
 
-    const b = parseInt(
-        hex.slice(5, 7),
-        16
-    );
+    const b =
+        parseInt(
+            hex.slice(5, 7),
+            16
+        );
 
     const brightness =
-        (r * 299 + g * 587 + b * 114) / 1000;
+        (r * 299 +
+            g * 587 +
+            b * 114) / 1000;
 
     return brightness > 155
         ? "#222222"
@@ -887,6 +1036,7 @@ function readableTextColor(hex) {
 ======================================================= */
 
 function keyboard(event) {
+
     if (
         !app.running ||
         app.locked
@@ -895,6 +1045,7 @@ function keyboard(event) {
     }
 
     switch (event.key) {
+
         case "1":
         case "ArrowLeft":
             answer(1);
@@ -918,6 +1069,7 @@ function keyboard(event) {
 ======================================================= */
 
 function registerEvents() {
+
     el.startBtn.addEventListener(
         "click",
         startQuiz
@@ -956,12 +1108,14 @@ function registerEvents() {
     document.addEventListener(
         "keydown",
         event => {
+
             if (
                 event.key === "Escape" &&
                 !el.profileScreen.classList.contains("hidden")
             ) {
                 backToResults();
             }
+
         }
     );
 }
@@ -972,7 +1126,9 @@ function registerEvents() {
 ======================================================= */
 
 function init() {
+
     if (!dataIsAvailable()) {
+
         console.error(
             "FraktionsFinder: questions.js oder fraktionen.js fehlt."
         );
@@ -985,7 +1141,7 @@ function init() {
     showScreen(el.startScreen);
 
     console.log(
-        "FraktionsFinder 1848 – script.js v5.0 geladen."
+        "FraktionsFinder 1848 – script.js v5.1 geladen."
     );
 }
 
@@ -995,9 +1151,16 @@ function init() {
 ======================================================= */
 
 window.FraktionsFinder = {
-    getResults: () => app.results,
-    getWinner: () => app.winner,
-    getAnswers: () => [...app.answers],
+
+    getResults: () =>
+        app.results,
+
+    getWinner: () =>
+        app.winner,
+
+    getAnswers: () =>
+        [...app.answers],
+
     renderWing,
     renderAxis,
     renderWinner,
@@ -1011,11 +1174,15 @@ window.FraktionsFinder = {
 ======================================================= */
 
 if (document.readyState === "loading") {
+
     document.addEventListener(
         "DOMContentLoaded",
         init,
         { once: true }
     );
+
 } else {
+
     init();
+
 }
