@@ -412,10 +412,10 @@ function renderWing() {
 ======================================================= */
 
 const axisPositions = {
-    donnersberg: 5,
-    deutscherhof: 18,
-    westendhall: 32,
-    wuerttembergerhof: 46,
+   donnersberg: 5,
+    deutscherhof: 20,
+    westendhall: 35,
+    wuerttembergerhof: 48,
     augsburgerhof: 60,
     landsberg: 73,
     casino: 87,
